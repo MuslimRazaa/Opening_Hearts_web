@@ -1,0 +1,20 @@
+
+/* For desktops */
+@media (max-width: 1400px) {
+  .feature-product-card-icon-wrapper p {
+    display: none;
+}
+  }
+@media (max-width: 1300px) {
+  .store-card-logo-section {
+    padding: 5px 9px;
+    gap: 5px;
+    width: 100%;
+    left: 0%;
+}
+.shopping-cart-details-payment-cards {
+  gap: 2px;
+}
+
+
+  }

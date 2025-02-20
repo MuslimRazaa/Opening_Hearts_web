@@ -1,0 +1,72 @@
+import React, { useEffect, useRef, useState } from 'react'
+import servicebanner from '../../media/images/service-banner.png'
+import { Link } from 'react-router-dom';
+import { allFeaturedServiceBanner } from '../../utils/api';
+
+function ServiceBanner() {
+    const [resourceStatus, setResourceStatus] = useState(false)
+ const [banner, setBanner] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+
+    const resourceRef = useRef(null); // Create a ref for the resource element
+    const handleResourceMenu =()=>{
+        setResourceStatus(!resourceStatus)
+    }
+    useEffect(() => {
+        // Function to handle clicks outside of the resource element
+        const handleClickOutside = (event) => {
+            if (resourceRef.current && !resourceRef.current.contains(event.target)) {
+                setResourceStatus(false); // Set status to false if clicked outside
+            }
+        };
+
+        // Bind the event listener to document
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+
+    useEffect(() => {
+      const fetchedAllFeaturedServiceBanner = async () => {
+          try {
+              const response = await allFeaturedServiceBanner();
+              setBanner(response?.data?.data?.banners); // Adjust based on API response structure
+          } catch (error) {
+              console.error('Error fetching top-rated products:', error);
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchedAllFeaturedServiceBanner();
+  }, []);
+
+
+  return (
+    <>
+      <div className='service-landing-page'>
+            {/* <img src={banner[0]?.image} style={{height:"calc(100vh - 236.24px)"}}/> */}
+            <img src={servicebanner}/>
+       <div className="container">
+           <div className="service-banner-content">
+                <h3> One Stop Solution <span 
+                style={{
+                   fontWeight:"400" , 
+                   marginLeft:"15px",
+                   fontFamily:"openSans"
+                }}>
+                    For all of your</span></h3>
+                <h2 className='service-heading-problem' style={{fontSize:"145px" , }} >PROBLEM</h2>
+           </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default ServiceBanner
