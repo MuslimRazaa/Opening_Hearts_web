@@ -24,11 +24,11 @@ function SipplierProducts() {
 
     const [activeTab, setActiveTab] = useState("Product");
 
-    const itemsPerPage = pagination?.page_size;
-    const totalItems = pagination?.total; // Total number of products
+    // const itemsPerPage = pagination?.page_size;
+    // const totalItems = pagination?.total; // Total number of products
 
-    const itemsPerPage2 = 7;
-    const totalItems2 = 35; // Total number of products
+    // const itemsPerPage2 = 7;
+    // const totalItems2 = 35; // Total number of products
 
     const brand = ""
     const min = ""
@@ -82,6 +82,7 @@ function SipplierProducts() {
         try {
             const response = await fetchProductPageSuplier(category);
             setAllSuplier(response?.data?.data?.seller); // Adjust based on API response structure
+            console.log(allSuplier, "all suppliers here")
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
@@ -158,17 +159,17 @@ function SipplierProducts() {
                         <>
                             {allSuplier?.map((supplier) => (
                                 <div key={supplier.id}>
-                                    <FeatureSupplierCards allSuplier={allSuplier} />
+                                    <FeatureSupplierCards suplier={supplier} />
                                 </div>
                             ))}
                         </>
                     </div>
                     <div className="feature-product-paginantion">
-                        <Pagination
+                        {/* <Pagination
                             totalItems={totalItems2}
                             itemsPerPage={itemsPerPage2}
                             onPageChange={setCurrentPage2}
-                        />
+                        /> */}
                     </div>
                 </div>
             </div>

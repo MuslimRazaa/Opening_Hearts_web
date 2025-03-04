@@ -958,6 +958,8 @@ ul.sec-ul-two li a {
 
 .funding-slider img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .text-campaigns {
@@ -5196,7 +5198,7 @@ input.card-form-input {
 .customer-card-dash:hover {
     background: linear-gradient(129deg, #F16522 0%, #EB008B 100%);
     cursor: pointer;
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
     transition: all 0.3s ease-in-out;
     color: white;
 }
@@ -5210,8 +5212,13 @@ input.card-form-input {
     -webkit-text-fill-color: white;
 }
 
-.customer-card-dash:hover .color-full-arrow {
+.customer-card-dash:hover img.color-full-arrow {
     display: none;
+
+}
+
+.customer-card-dash:hover img.white-arrow {
+    display: block;
 }
 
 
@@ -5262,6 +5269,7 @@ img.color-full-arrow {
 }
 
 img.white-arrow {
+    display: none;
     width: 27.39px;
     height: 27.39px;
 }

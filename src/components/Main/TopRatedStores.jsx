@@ -7,6 +7,7 @@ import soffa from '../../media/images/Tem_Images/soffaa.svg'
 import { Link } from 'react-router-dom'
 import BASE_URL, { topRatedStores } from '../../utils/api'
 import axios from 'axios'
+import LoadingComponents from '../shared/loaders/LoadingComponents'
 
 
 function TopRatedStores() {
@@ -23,7 +24,7 @@ function TopRatedStores() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchedTopStores();
   }, []);
@@ -57,12 +58,12 @@ function TopRatedStores() {
               </div> */}
 
               {loading ? (
-                <p>Loading...</p>
+                <LoadingComponents />
               ) : (
                 store?.slice(0, 4).map((product) => (
                   <div className="col-lg-3" key={product.id}>
                     <StoreCard
-                      guid={product?.guid}                        
+                      guid={product?.guid}
                       cat={product?.category[0]?.name}
                       image={product.cover_image || 'fallback-image-url'}
                       name={product.shop_name}

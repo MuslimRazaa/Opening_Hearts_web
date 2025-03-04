@@ -4,7 +4,7 @@ import cart from '../../media/images/shopping-cart.svg';
 import bell from '../../media/images/notification-bing.svg';
 import sep from '../../media/images/sepratorNav.svg';
 import down from '../../media/images/whiteArrowDown.svg';
-import userrr from '../../media/images/userrr.png';
+import userrr from '../../media/images/blankuser.jpg';
 import getDonation from '../../media/images/framee2.svg';
 import becomeAseller from '../../media/images/becomeAseller.svg';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { BASE_URL, getProfileDetails } from '../../utils/api';
 import axios from 'axios';
 import { useUserData } from '../shared/helperMethod';
 
-function HeaderTop() {
+function HeaderTop({RefetchuserData}) {
     const [userIcon, setUserIcon] = useState(false)
     const [peoductDrop, setProductDrop] = useState(false)
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -26,6 +26,7 @@ function HeaderTop() {
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
 
+    const userfetch = useUserData()
 
 
     const fetchCartCountApi = async () => {
@@ -60,6 +61,14 @@ function HeaderTop() {
         fetchCartCountApi();
         FetchGetProfileDetails();
     }, []);
+
+
+    useEffect(() => {
+        FetchGetProfileDetails();
+    }, [RefetchuserData]);
+
+
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -183,7 +192,7 @@ function HeaderTop() {
                                 </div>
                                 {/* <img src={getProfile?.media[0]?.original_url || blankUser} /> */}
 
-                                <img src={getProfile?.media[0]?.original_url || userrr} ref={buttonRef} onClick={handleUserIcon} style={{ padding: "0px 0px" }} />
+                                <img src={userfetch?.profile_image || userrr} ref={buttonRef} onClick={handleUserIcon} style={{ padding: "0px 0px" }} />
                             </div>)
                         }
                     </div>

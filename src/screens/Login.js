@@ -29,7 +29,7 @@ function Login() {
     });
 
     useEffect(() => {
-        const savedEmail = localStorage.getItem('rememberedEmail');
+        const savedEmail = sessionStorage.getItem('rememberedEmail');
         if (savedEmail) {
             setRememberMe(true);
         }
@@ -47,29 +47,32 @@ function Login() {
                 is_user: 1,
             };
             const response = await LoginUser(formData);
-            
+
             // If "Remember Me" is checked, save email to local storage
             if (rememberMe) {
-                localStorage.setItem('rememberedEmail', values.email);
+                sessionStorage.setItem('rememberedEmail', values.email);
             } else {
-                localStorage.removeItem('rememberedEmail');
+                sessionStorage.removeItem('rememberedEmail');
             }
+            
             localStorage.setItem('user_data', JSON.stringify(response?.data?.data));
             localStorage.setItem('token', response?.data?.data?.token);
             // Show success alert
-            await Swal.fire({
-                icon: 'success',
-                text: 'Login successfully.',
-                confirmButtonText: 'OK',
-                timer: 2000
-            });
-            
+            // await Swal.fire({
+            //     icon: 'success',
+            //     text: 'Login successfully.',
+            //     confirmButtonText: 'OK',
+            //     timer: 2000
+            // });
             navigate('/'); // Redirect after successful login
         } catch (err) {
             Swal.fire({
                 icon: 'error',
                 text: err.response?.data?.message || 'Something went wrong!',
             });
+            if (err.response?.data?.message === "OTP Not Verified.") {
+                navigate('/reset-password-otp', { state: { email: values.email } }); // Redirect after successful login
+            }
         } finally {
             setLoading(false);
         }
@@ -85,7 +88,7 @@ function Login() {
                     </div>
                     <Formik
                         initialValues={{
-                            email: localStorage.getItem('rememberedEmail') || '',
+                            email: sessionStorage.getItem('rememberedEmail') || '',
                             password: '',
                         }} validationSchema={validationSchema}
                         onSubmit={handleSubmit}

@@ -6,6 +6,7 @@ import buss from '../../media/images/Tem_Images/buss.svg'
 import { Link } from 'react-router-dom'
 import BASE_URL, { topRatedService } from '../../utils/api'
 import axios from 'axios'
+import LoadingComponents from '../shared/loaders/LoadingComponents'
 
 
 function TrendingService() {
@@ -48,7 +49,7 @@ function TrendingService() {
 
             <div className="row">
             {loading ? (
-              <p>Loading...</p>
+                <LoadingComponents/>
             ) : (
               service?.slice(0, 4).map((product) => (
                 <div className="col-lg-3" key={product.id}>

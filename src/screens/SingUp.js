@@ -36,7 +36,7 @@ function SignUp() {
   const handlePlaceChanged = (setFieldValue) => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
-  
+
       if (place) {
         const address = place.formatted_address || '';
         const lat = place.geometry?.location?.lat();
@@ -45,7 +45,7 @@ function SignUp() {
         let country = '';
         let city = '';
         let zip_code = '';
-  
+
         // Extract address components
         addressComponents.forEach((component) => {
           const types = component.types;
@@ -59,7 +59,7 @@ function SignUp() {
             zip_code = component.long_name;
           }
         });
-  
+
         // Set values in the form
         setFieldValue('address', address);
         setFieldValue('lat', lat || '');
@@ -70,7 +70,7 @@ function SignUp() {
       }
     }
   };
-  
+
 
 
 
@@ -82,6 +82,9 @@ function SignUp() {
       .email('Invalid email format')
       .required('Email is required'),
     address: Yup.string().required('Address is required'),
+    country: Yup.string().required('Country is required'),
+    city: Yup.string().required('City is required'),
+    zip_code: Yup.string().required('Postal code is required'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('Password is required'),
@@ -112,14 +115,14 @@ function SignUp() {
         is_user: 1,
         package_id: 1,
       });
-  
+
       // Show success alert
       await Swal.fire({
         icon: 'success',
         text: 'Your account has been created successfully.',
         confirmButtonText: 'OK',
       });
-  
+
       // Navigate on success
       navigate('/reset-password-otp', { state: { email: values.email } });
     } catch (err) {
@@ -145,65 +148,98 @@ function SignUp() {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={async (values, { setSubmitting, validateForm }) => {
+              const errors = await validateForm();
+              if (Object.keys(errors).length > 0) {
+                setSubmitting(false);
+                return;
+              }
+
+              try {
+                await registerUser({ ...values, is_user: 1, package_id: 1 });
+
+                await Swal.fire({
+                  icon: 'success',
+                  text: 'Your account has been created successfully.',
+                  confirmButtonText: 'OK',
+                });
+
+                navigate('/reset-password-otp', { state: { email: values.email } });
+              } catch (err) {
+                Swal.fire({
+                  icon: 'error',
+                  text: err.message || 'Something went wrong!',
+                });
+              } finally {
+                setSubmitting(false);
+              }
+            }}
           >
-            {({ isSubmitting, setFieldValue }) => (
+            {({ isSubmitting, setFieldValue, validateForm, values, errors }) => (
               <Form className="form-main-signup">
+                {/* First Name */}
                 <div>
-                  <p>First Name</p>
-                  <Field
-                    type="text"
-                    name="first_name"
-                    placeholder="Example"
-                  />
+                  <p>First Name <span style={{ color: "red" }}>*</span></p>
+                  <Field type="text" name="first_name" placeholder="Example" />
                   <ErrorMessage name="first_name" component="div" className="error" />
                 </div>
+
+                {/* Last Name */}
                 <div>
-                  <p>Last Name</p>
-                  <Field
-                    type="text"
-                    name="last_name"
-                    placeholder="Example"
-                  />
+                  <p>Last Name <span style={{ color: "red" }}>*</span></p>
+                  <Field type="text" name="last_name" placeholder="Example" />
                   <ErrorMessage name="last_name" component="div" className="error" />
                 </div>
 
+                {/* Email */}
                 <div>
-                  <p>Email</p>
-                  <Field
-                    type="email"
-                    name="email"
-                    placeholder="example@example.com"
-                  />
+                  <p>Email <span style={{ color: "red" }}>*</span></p>
+                  <Field type="email" name="email" placeholder="example@example.com" />
                   <ErrorMessage name="email" component="div" className="error" />
                 </div>
 
+                {/* Address Autocomplete */}
                 <div>
-                  <p>Address</p>
+                  <p>Address <span style={{ color: "red" }}>*</span></p>
                   <Autocomplete
                     onLoad={handleAutocompleteLoad}
                     onPlaceChanged={() => handlePlaceChanged(setFieldValue)}
                   >
-                    <Field
-                      type="text"
-                      name="address"
-                      placeholder="Search your address"
-                    />
+                    <Field type="text" name="address" placeholder="Search your address" />
                   </Autocomplete>
                   <ErrorMessage name="address" component="div" className="error" />
                 </div>
 
+                {/* Country & City Fields */}
+                <div className='country/city-register'>
+                  <div>
+                    <p>Country <span style={{ color: "red" }}>*</span></p>
+                    <Field type="text" name="country" placeholder="Country" />
+                    <ErrorMessage name="country" component="div" className="error" />
+                  </div>
+                  <div>
+                    <p>City <span style={{ color: "red" }}>*</span></p>
+                    <Field type="text" name="city" placeholder="City" />
+                    <ErrorMessage name="city" component="div" className="error" />
+                  </div>
+                </div>
+
+                {/* Postal Code */}
+                <div>
+                  <p>Postal Code <span style={{ color: "red" }}>*</span></p>
+                  <Field type="text" name="zip_code" placeholder="XXXXX" />
+                  <ErrorMessage name="zip_code" component="div" className="error" />
+                </div>
+
+                {/* Password Fields */}
                 <div style={{ position: 'relative' }}>
-                  <p>Password</p>
-                  <Field
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="*************"
-                  />
+                  <p>Password <span style={{ color: "red" }}>*</span></p>
+                  <Field type={showPassword ? "text" : "password"} name="password" placeholder="*************" />
                   <img
                     src={showPassword ? eye : eyeHide}
-                    onClick={() => setShowPassword((prev) => !prev)}
+                    onClick={() => setShowPassword(prev => !prev)}
                     alt="Toggle Password"
+                    className="password-toggle-icon"
                     style={{
                       width: "35px",
                       position: 'absolute',
@@ -218,16 +254,13 @@ function SignUp() {
                 </div>
 
                 <div style={{ position: 'relative' }}>
-                  <p>Confirm Password</p>
-                  <Field
-                    type={showCPassword ? "text" : "password"}
-                    name="password_confirmation"
-                    placeholder="*************"
-                  />
+                  <p>Confirm Password <span style={{ color: "red" }}>*</span></p>
+                  <Field type={showCPassword ? "text" : "password"} name="password_confirmation" placeholder="*************" />
                   <img
                     src={showCPassword ? eye : eyeHide}
-                    onClick={() => setShowCPassword((prev) => !prev)}
+                    onClick={() => setShowCPassword(prev => !prev)}
                     alt="Toggle Password"
+                    className="password-toggle-icon"
                     style={{
                       width: "35px",
                       position: 'absolute',
@@ -241,10 +274,7 @@ function SignUp() {
                   <ErrorMessage name="password_confirmation" component="div" className="error" />
                 </div>
 
-                <div className="signup-bottom-text">
-                  <p>Already Registered? <Link to="/login" className="link">Login</Link></p>
-                </div>
-
+                {/* Signup Button */}
                 <div className="sign-up-form-button">
                   <button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? 'Signing Up...' : 'Sign Up'}

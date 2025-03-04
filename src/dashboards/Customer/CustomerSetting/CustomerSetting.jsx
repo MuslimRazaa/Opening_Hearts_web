@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import editproflie from '../../../media/images/uploadicon.png'
+import blankUser from '../../../media/images/blankuser.jpg'
 import mastercard from '../../../media/images/setting-master-card.png'
 import visacard from '../../../media/images/setting-visa.png'
 import paypalcard from '../../../media/images/setting-paypal.png'
@@ -11,12 +12,13 @@ import { Autocomplete, useLoadScript } from '@react-google-maps/api'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Swal from 'sweetalert2'
 import { toast, ToastContainer } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import LoadingComponents from '../../../components/shared/loaders/LoadingComponents'
 
 
 const CustomerSetting = () => {
     const [active, setActive] = useState("profile")   // hook useState
+    const [refetch, setRefetch] = useState(false)   // hook useState
     const [button, setButton] = useState(false)
     const [address, setAddress] = useState(false)
     const [addressValue, setAddressValue] = useState([])
@@ -39,6 +41,9 @@ const CustomerSetting = () => {
     const navigate = useNavigate()
 
 
+    const { updateUserData } = useOutletContext();
+
+    console.log(updateUserData(), "--------------update User Data")
 
     const FetchGetProfileDetails = async () => {
         setProfileLoading(true)
@@ -69,6 +74,8 @@ const CustomerSetting = () => {
                 text: 'Your Profile has been updated successfully.',
                 confirmButtonText: 'OK',
             });
+            localStorage.setItem("user_data", JSON.stringify(response?.data?.data))  
+            FetchGetProfileDetails();
         }
         catch (err) {
             console.error(err)
@@ -313,7 +320,7 @@ const CustomerSetting = () => {
                     {profileLoading ? <LoadingComponents />  :
                     (<form action="">
                         <div className="customer-setting-edit-pro-img-and-name">
-                            <img src={imageShow || getProfile?.media[0]?.original_url} alt="Profile" className="profile-image" style={{ height: "100px", width: "100px" }} />
+                            <img src={imageShow || getProfile?.media[0]?.original_url || blankUser} alt="Profile" className="profile-image" style={{ height: "100px", width: "100px", objectFit:"cover" }} />
                             <div className="image-upload-input-plus" >
                                 <img src={editproflie} alt="edit" style={{ width: "30px" }} />
                                 <span>Upload Image</span>

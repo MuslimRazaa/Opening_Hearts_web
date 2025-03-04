@@ -4,14 +4,16 @@ import TopCatagoriesCard from "./TopCatagoriesCard";
 import left from "../../media/images/left-arrow-svgrepo-com.svg";
 import right from "../../media/images/right-arrow-svgrepo-com.svg";
 import { topRatedCategories } from "../../utils/api";
+import LoadingComponents from "../shared/loaders/LoadingComponents";
 
 function TopCatSlider() {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     const fetchTopRatedCategories= async () => {
+      setLoading(true)
       try {
         const response = await topRatedCategories();
         setCategories(response?.data?.data?.categories); // Adjust based on API response structure
@@ -61,18 +63,27 @@ function TopCatSlider() {
     nextArrow: <NextArrow /> // Attach custom NextArrow component
   };
 
-  return (
-    <div className="slider-wrapper">
-      <div className="slider-container">
-        <Slider {...settings}>
-          {categories.map((product) => (
-            <div>
-            <TopCatagoriesCard image={product?.media[0]?.original_url } txt={product?.name}/>
-          </div>))}
-        </Slider>
+
+  if(loading){
+    return(
+      <LoadingComponents/>
+    )
+  }
+  else{
+    return (
+      <div className="slider-wrapper">
+        <div className="slider-container">
+          <Slider {...settings}>
+            {categories.map((product) => (
+              <div>
+              <TopCatagoriesCard image={product?.media[0]?.original_url } txt={product?.name}/>
+            </div>))}
+          </Slider>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+ 
 }
 
 export default TopCatSlider;

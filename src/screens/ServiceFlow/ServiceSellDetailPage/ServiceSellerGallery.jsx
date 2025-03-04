@@ -62,7 +62,7 @@ const ServiceSellerGallery = ({ data, data_review }) => {
         } catch (error) {
             await Swal.fire({
                 icon: 'error',
-                text: error.message,
+                text: error?.response?.data?.message,
                 confirmButtonText: 'Back',
             });
             console.error('Error fetching categories:', error);
@@ -90,7 +90,7 @@ const ServiceSellerGallery = ({ data, data_review }) => {
         } catch (error) {
             await Swal.fire({
                 icon: 'error',
-                text: error.message,
+                text: error?.response?.data?.message,
                 confirmButtonText: 'Back',
             });
             console.error('Error fetching categories:', error);

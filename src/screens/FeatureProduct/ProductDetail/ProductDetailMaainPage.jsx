@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import mask from '../../../media/images/stripe.png'
 import delivery from '../../../media/images/busss.png'
 import sec from '../../../media/images/secure.png'
@@ -33,7 +33,7 @@ function ProductDetailMaainPage({ guid }) {
     const [size, setSize] = useState([]);
     const [color, setColor] = useState([]);
 
-
+    const navigate = useNavigate()
 
     const toggleSection = (section) => {
         setActiveSection(prevSections => {
@@ -142,12 +142,13 @@ function ProductDetailMaainPage({ guid }) {
                         const result = await addToCartApi(formData);
                         setLoading(false)
 
-                        // await Swal.fire({
-                        //     icon: 'success',
-                        //     text: 'Add to Cart Successfully',
-                        //     timer: 1500,
-                        // });
-                        toast.success('Add to Cart Successfully !');
+                        await Swal.fire({
+                            icon: 'success',
+                            text: 'Add to Cart Successfully',
+                            timer: 1500,
+                        });
+                        navigate('/ShoppingCart');
+                        // toast.success('Add to Cart Successfully !');
 
 
                     } catch (error) {
@@ -159,12 +160,13 @@ function ProductDetailMaainPage({ guid }) {
                         //     timer: 1500,
                         //     confirmButtonText: 'Back',
                         // });
-                            await Swal.fire({
-                                icon: 'error',
-                                text: error.response.data.message,
-                                timer: 1500,
-                                confirmButtonText: 'Back',
-                            });
+                        await Swal.fire({
+                            icon: 'error',
+                            text: error?.response?.data?.message,
+                            timer: 1500,
+                            confirmButtonText: 'Back',
+                        });
+                        console.log(error?.response?.data?.message, "product me error")
                     }
                 }
                 else {
@@ -239,13 +241,13 @@ function ProductDetailMaainPage({ guid }) {
             } catch (error) {
                 console.error('Error adding to cart:', error);
                 setLoading(false)
-                    await Swal.fire({
-                        icon: 'error',
-                        text: error.response.data.message,
-                        timer: 1500,
-                        confirmButtonText: 'Back',
-                    });
-            
+                await Swal.fire({
+                    icon: 'error',
+                    text: error.response.data.message,
+                    timer: 1500,
+                    confirmButtonText: 'Back',
+                });
+
             }
         }
 

@@ -2730,6 +2730,9 @@ p.newsletter-vr-p {
 
 .user-info img {
     width: 50px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
 }
 
 .user-info h3 {
@@ -10037,7 +10040,7 @@ input.chat-search-input {
 .chat-search-search-box {
     position: relative;
     display: flex;
-    margin: 13px 25px;
+    margin: 13px 10px;
     align-items: center;
     justify-content: left;
 }
@@ -13109,14 +13112,18 @@ button.btn-cancel-security {
   .side-bar-user-info img {
     width: 100px;
     border-radius: 50%;
+    height: 100px;
+    object-fit: cover;
 }
 .user-nav-button-container img {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
 .user-info img {
     border-radius: 50%;
+    
 }
 .heading-side-customer-pro-dash {
     display: flex;
@@ -13125,4 +13132,27 @@ button.btn-cancel-security {
 }
 .heading-side-customer-pro-dash p {
     margin: 0;
+}
+
+.country\/city-register input {
+    width: 100%;
+    height: 55px;
+    border-radius: 19px;
+    border: 1px solid rgba(203, 203, 203, 1);
+    padding: 0rem 0px 0px 20px;
+    background: rgba(251, 252, 251, 1);
+    font-size: 19px;
+}
+
+.country\/city-register {
+    display: flex;
+    justify-content: space-between;
+}
+.wallet-modal-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.emergency-fund-dolortext {
+    margin: 0px 15px;
 }

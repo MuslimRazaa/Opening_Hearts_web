@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import DonationSideBar from '../../../components/Layout/DonationSideBar/DonationSideBar'
 import Footer from '../../../components/Layout/Footer'
@@ -7,9 +7,15 @@ import CustomerSideBar from '../../../components/Layout/CustomerSideBar/Customer
 
 
 function CustomerDashboardDashboard() {
+  const [userData, setUserData] = useState(null);
+
+  // Function to update user data when API is called
+  const updateUserData = (newData) => {
+    setUserData(newData);
+  };
   return (
     <>
-      <HeaderTop/>
+      <HeaderTop RefetchuserData={userData}/>
     
     <div className='container'>
       <div className="dashboard-seller-service">
@@ -22,10 +28,10 @@ function CustomerDashboardDashboard() {
       </div>
       <div className="row">
         <div className="col-lg-4">
-          <CustomerSideBar/>
+          <CustomerSideBar RefetchuserData={userData}/>
         </div>
         <div className="col-lg-8">
-        <Outlet />
+        <Outlet context={{ updateUserData }}/>
         </div>  
         </div>
       </div >

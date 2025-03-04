@@ -5,8 +5,9 @@ import blankUser from '../../../media/images/blankuser.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react'
 import { getProfileDetails } from '../../../utils/api';
+import { useUserData } from '../../shared/helperMethod';
 
-function CustomerSideBar() {
+function CustomerSideBar({RefetchuserData}) {
 
     const [userIcon, setUserIcon] = useState(false)
     const [settingsDownActive, setSettingsDownActive] = useState(false)
@@ -18,6 +19,9 @@ function CustomerSideBar() {
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
+
+    const userfetch = useUserData()
+
 
     const handleLogout = () => {
         localStorage.clear();
@@ -65,9 +69,14 @@ function CustomerSideBar() {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        FetchGetProfileDetails();
+    }, [RefetchuserData]);
+
+    console.log(RefetchuserData, "RefetchuserData-------------")
+
     const user = localStorage.getItem("User")
-
-
     const isActive = (path) => location.pathname === path;
 
 
@@ -76,7 +85,7 @@ function CustomerSideBar() {
         <div>
             <div className="seller-side-sidebar">
                 <div className="side-bar-user-info">
-                    <img src={getProfile?.media[0]?.original_url || blankUser} />
+                    <img src={userfetch?.profile_image || blankUser} />
                     <h3>{getProfile?.first_name}</h3>
                     <h4>{getProfile?.email}</h4>
                 </div>

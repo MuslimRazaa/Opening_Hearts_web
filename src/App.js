@@ -127,6 +127,7 @@ import RowExpansionDemo from './dashboards/Customer/CustomerMainDashboard/Folded
 
 
 function App() {
+
   return (
     <>
       <div id="google_translate_element"></div>

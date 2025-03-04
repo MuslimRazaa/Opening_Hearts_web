@@ -7,6 +7,8 @@ import search from '../../media/images/search.svg'
 import FeatureSupplierCards from "../../components/Main/FeatureSupplierCards";
 import { allFeaturedProducts, fetchProductPageSuplier, productAllCategories } from "../../utils/api";
 import { Spinner } from "react-bootstrap";
+import LoadingComponents from "../../components/shared/loaders/LoadingComponents";
+import NoDataFound from "../../components/shared/noDataFound/NoDataFound";
 
 function FeatureProductSec3() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -218,9 +220,9 @@ function FeatureProductSec3() {
               </>) :
                 (<div className="no-product-ava">
                   {loading ? (<div className='centered-spinner'>
-                    <Spinner animation="border" role="status" />
+                    <LoadingComponents/>
                   </div>) :
-                    (<h1>No Products available</h1>)}
+                    (<NoDataFound title="No Product Found"/>)}
                 </div>)
             ) : (
               <>

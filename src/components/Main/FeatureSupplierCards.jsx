@@ -8,10 +8,10 @@ import time from '../../media/images/subway_time-3.png'
 import { Link } from 'react-router-dom'
 import { fetchProductPageSuplier } from '../../utils/api'
 
-function FeatureSupplierCards({allSuplier}) {
+function FeatureSupplierCards({suplier}) {
     return (
         <div className='container'>
-           {allSuplier?.map((suplier, index) => (
+           {/* {allSuplier?.map((suplier, index) => ( */}
             <div className="supplier-card-main">
                 <div className="supplier-card-top-sec">
                     <div className="supplier-card-name-plate d-flex">
@@ -68,7 +68,7 @@ function FeatureSupplierCards({allSuplier}) {
                     </div>
                 </div>
             </div>
-            ))}
+            {/* ))} */}
         </div>
     )
 }

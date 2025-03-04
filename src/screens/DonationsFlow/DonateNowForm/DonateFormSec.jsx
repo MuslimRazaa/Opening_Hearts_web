@@ -151,14 +151,15 @@ function DonateFormSec() {
                 }
             });
         } catch (error) {
-            setError(error.message)
+            setError(error?.response?.data?.message)
+            setLoading(false);
             // setLoading(false);
-            // console.error("Error processing payment:", error);
-            // await Swal.fire({
-            //     icon: 'error',
-            //     text: `Order Failed`,
-            //     confirmButtonText: 'Back',
-            // });
+            console.error("Error processing payment:", error);
+            await Swal.fire({
+                icon: 'error',
+                text: error?.response?.message,
+                confirmButtonText: 'Back',
+            });
         }
     };
 
@@ -213,8 +214,30 @@ function DonateFormSec() {
                                     </div>
                                     <div className="col-md-4">
                                         <div className="emergency-fund-dolortext">
-                                            <input type='number' value={amount ? amount : donationAmount} placeholder='eg: 30$' onChange={(e) => handleDonationAmount(e)} />
-                                        </div>
+                                            <input
+                                                type="number"
+                                                value={amount ? amount : donationAmount}
+                                                placeholder="Enter Amount"
+                                                onChange={(e) => {
+                                                    let value = e.target.value;
+
+                                                    // Remove invalid characters (allow only numbers & decimal)
+                                                    value = value.replace(/[^0-9.]/g, '');
+
+                                                    // Prevent leading "." (e.g., ".5" → "0.5")
+                                                    if (value.startsWith('.')) value = '0' + value;
+
+                                                    // Allow only up to 6 characters (including decimals)
+                                                    if (value.length > 6) return;
+
+                                                    // Allow only positive numbers
+                                                    if (parseFloat(value) >= 0 || value === '') {
+                                                        handleDonationAmount({ target: { value } });
+                                                    }
+                                                }}
+                                                min="0"
+                                            />                                
+                                         </div>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -222,7 +245,7 @@ function DonateFormSec() {
                                     <div className="col-md-12">
                                         <div className="total-donate-price">
                                             <p>Total:</p>
-                                            <p>${amount ? amount : donationAmount}</p>
+                                            <p>{amount ? `$${amount}` : donationAmount ? `$${donationAmount}` : ''}</p>
                                         </div>
                                     </div>
                                 </div>

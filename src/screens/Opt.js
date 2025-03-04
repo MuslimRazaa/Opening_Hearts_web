@@ -23,32 +23,43 @@ function Otp() {
         setLoading(true);
         setError('');
 
-        const formData = {
-            email: email, // Replace with actual email from state/context
-            otp,
-            type: 1, // For email verification
-            is_user: 1,
-        };
-
-        try {
-            const response = await verifyOtp(formData);
-            // Show success alert
-            await Swal.fire({
-                icon: 'success',
-                text: 'Otp Verified Successfully',
-                confirmButtonText: 'Next',
-            });
-            // Redirect on success
-            navigate('/newpassword' , { state: { email: email } });
-        } catch (err) {
+        if (otp?.length < 5) {
             Swal.fire({
                 icon: 'error',
-                text: err.response?.data?.message || 'Something went wrong!',
-            });
-            setError(err.response?.data?.message || 'Failed to verify OTP. Please try again.');
-        } finally {
+                text: 'Enter OTP',
+            })
             setLoading(false);
         }
+        else {
+            const formData = {
+                email: email, // Replace with actual email from state/context
+                otp,
+                type: 1, // For email verification
+                is_user: 1,
+            };
+
+            try {
+                const response = await verifyOtp(formData);
+                // Show success alert
+                await Swal.fire({
+                    icon: 'success',
+                    text: 'Otp Verified Successfully',
+                    confirmButtonText: 'Next',
+                });
+                // Redirect on success
+                navigate('/newpassword', { state: { email: email } });
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    text: err.response?.data?.message || 'Something went wrong!',
+                });
+                setError(err.response?.data?.message || 'Failed to verify OTP. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+
     };
 
     return (
@@ -62,7 +73,7 @@ function Otp() {
                         <div className="Form-heading-otp">
                             <p>
                                 Now Enter Your 5 Digit Code We’ve Sent You On The Email<br />
-                                <Link to="" className="link">{email}</Link>
+                                {email}
                             </p>
                         </div>
                         <div className="OTP-holder">

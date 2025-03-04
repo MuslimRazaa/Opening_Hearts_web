@@ -4,6 +4,7 @@ import group from '../../media/images/Group.svg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL, { topRatedProducts } from '../../utils/api';
+import LoadingComponents from '../shared/loaders/LoadingComponents';
 
 
 function ProductToExplore() {
@@ -46,7 +47,7 @@ function ProductToExplore() {
 
           <div className="row">
             {loading ? (
-              <p>Loading...</p>
+              <LoadingComponents/>
             ) : (
               products?.map((product) => (
                 <div className="col-lg-3" key={product.id}>

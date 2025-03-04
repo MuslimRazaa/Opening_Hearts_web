@@ -239,7 +239,8 @@ const CustomerMainDashboard = () => {
 
                                 </div>
                                 <div className="recent-data-tabel">
-                                    <h2>Recent</h2>
+                                    <h2>Recentll</h2>
+                                    <LoadingComponents />
 
 
 

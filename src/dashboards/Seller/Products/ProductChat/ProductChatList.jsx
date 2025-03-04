@@ -7,6 +7,7 @@ import bank from '../../../../media/images/Group 1000006194.png'
 import blank from '../../../../media/images/blankuser.jpg'
 import { createChatRoom, getChatList, getCreatedChatList } from "../../../../utils/api";
 import Swal from "sweetalert2";
+import NoDataFound from "../../../../components/shared/noDataFound/NoDataFound";
 
 const chats = [
   { id: 1, name: "My AI Chat", lastMessage: "Will head to the Help Center...", profilePic: akane },
@@ -111,7 +112,7 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
       } else {
         setFilteredChats(
           newChatData?.filter(chat => chat?.shop_name?.toLowerCase().includes(searchQuery?.toLowerCase()))
-        );
+        );        
       }
     };
   
@@ -189,7 +190,8 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
         </div>
       )))
      : <>
-      <div className="chat-list-chat-main" style={{marginTop:"20px"}}>
+      <NoDataFound title="No Chat Found"/>
+      {/* <div className="chat-list-chat-main" style={{marginTop:"20px"}}>
           <img src={blank} style={{ borderRadius: "50%", marginRight: "10px" }} />
           <div>
             <div className="chat-list-chat-name-no-user"></div>
@@ -209,7 +211,7 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
             <div className="chat-list-chat-name-no-user"></div>
             <div className="chat-list-chat-last-message-no-message" style={{ color: "gray", fontSize: "0.9em" }}></div>
           </div>
-        </div>
+        </div> */}
         </>
     }
 
@@ -222,10 +224,10 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
             <div>
               <img src={require("../../../../media/images/close-circle.png")} onClick={handleCloseModal3} className="close-circle" />
             </div>
+            <h3>New Chat</h3>
             <div className="new-chat" onClick={handleOrderNowClick3}>
               <img src={edit} />
             </div>
-            <h3>New Chat</h3>
           </div>
           <br></br>
           <div className="chat-search-search-box">
@@ -238,7 +240,8 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
             />
             <span className="chat-search-icon"><img src={search} /></span>
           </div>
-          <div className="wallet-modal-form-wrapper">
+          {filteredChats?.length < 0 ? 
+          (<div className="wallet-modal-form-wrapper">
             {filteredChats?.map((chat) => (
               <div
                 key={chat.user_id}
@@ -252,7 +255,9 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
                 </div>
               </div>
             ))}
-          </div>
+          </div>) :
+           <NoDataFound title="No Chat Found"/>
+          }
         </div>
       </Modal>
 

@@ -59,7 +59,7 @@ function NewPassword() {
             });
 
             // Navigate to home on success
-            navigate('/');
+            navigate('/Login');
         } catch (err) {
             Swal.fire({
                 icon: 'error',

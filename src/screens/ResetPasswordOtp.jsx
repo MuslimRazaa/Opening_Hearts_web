@@ -23,32 +23,42 @@ function ResetPasswordOtp() {
         setLoading(true);
         setError('');
 
-        const formData = {
-            email: email, // Replace with actual email from state/context
-            otp,
-            type: 0, // For email verification
-            is_user: 1,
-        };
-
-        try {
-            const response = await verifyOtp(formData);
-            // Show success alert
-            await Swal.fire({
-                icon: 'success',
-                text: 'Your account has been verified successfully.',
-                confirmButtonText: 'OK',
-            });
-            // Redirect on success
-            navigate('/login');
-        } catch (err) {
+        if (otp?.length < 5) {
             Swal.fire({
                 icon: 'error',
-                text: err.response?.data?.message || 'Something went wrong!',
-            });
-            setError(err.response?.data?.message || 'Failed to verify OTP. Please try again.');
-        } finally {
+                text: 'Enter OTP',
+            })
             setLoading(false);
         }
+        else {
+            const formData = {
+                email: email, // Replace with actual email from state/context
+                otp,
+                type: 0, // For email verification
+                is_user: 1,
+            };
+
+            try {
+                const response = await verifyOtp(formData);
+                // Show success alert
+                await Swal.fire({
+                    icon: 'success',
+                    text: 'Your account has been verified successfully.',
+                    confirmButtonText: 'OK',
+                });
+                // Redirect on success
+                navigate('/login');
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    text: err.response?.data?.message || 'Something went wrong!',
+                });
+                setError(err.response?.data?.message || 'Failed to verify OTP. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
     };
 
     return (
@@ -62,7 +72,7 @@ function ResetPasswordOtp() {
                         <div className="Form-heading-otp">
                             <p>
                                 Now Enter Your 5 Digit Code We’ve Sent You On The Email<br />
-                                <Link to="" className="link">abc123@gmai.com</Link>
+                                {email}
                             </p>
                         </div>
                         <div className="OTP-holder">
@@ -76,9 +86,9 @@ function ResetPasswordOtp() {
                             />
                         </div>
                         <div className="sign-up-form-button">
-                            <button type="submit" disabled={loading}>
-                                {loading ? 'Verifying...' : 'Confirm'}
-                            </button>
+                                <button type="submit" disabled={loading}>
+                                    {loading ? 'Verifying...' : 'Confirm'}
+                                </button> 
                         </div>
                     </form>
                 </div>
