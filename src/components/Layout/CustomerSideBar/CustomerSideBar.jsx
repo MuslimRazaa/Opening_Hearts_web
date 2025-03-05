@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getProfileDetails } from '../../../utils/api';
 import { useUserData } from '../../shared/helperMethod';
 
-function CustomerSideBar({RefetchuserData}) {
+function CustomerSideBar() {
 
     const [userIcon, setUserIcon] = useState(false)
     const [settingsDownActive, setSettingsDownActive] = useState(false)
@@ -70,11 +70,7 @@ function CustomerSideBar({RefetchuserData}) {
         };
     }, []);
 
-    useEffect(() => {
-        FetchGetProfileDetails();
-    }, [RefetchuserData]);
 
-    console.log(RefetchuserData, "RefetchuserData-------------")
 
     const user = localStorage.getItem("User")
     const isActive = (path) => location.pathname === path;

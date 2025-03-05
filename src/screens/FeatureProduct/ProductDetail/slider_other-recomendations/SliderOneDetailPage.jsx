@@ -5,6 +5,7 @@ import right from "../../../../media/images/rarrow.png";
 import image2 from "../../../../media/images/Rectangle 4404.png";
 import FeatureProductCard from "../../../../components/Main/FeatureProductCard";
 import { relatedproducts } from "../../../../utils/api";
+import NoDataFound from "../../../../components/shared/noDataFound/NoDataFound";
 
 
 
@@ -68,7 +69,7 @@ function SliderOneDetailPage({ guid }) {
           ))}
 
         </Slider>
-      </div> : "Not Available"}
+      </div> : <NoDataFound title={"No Product Available"}/>}
     </div>
   );
 }

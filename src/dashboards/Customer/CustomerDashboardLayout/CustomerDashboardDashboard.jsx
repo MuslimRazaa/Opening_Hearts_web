@@ -15,7 +15,7 @@ function CustomerDashboardDashboard() {
   };
   return (
     <>
-      <HeaderTop RefetchuserData={userData}/>
+      <HeaderTop/>
     
     <div className='container'>
       <div className="dashboard-seller-service">
@@ -28,10 +28,10 @@ function CustomerDashboardDashboard() {
       </div>
       <div className="row">
         <div className="col-lg-4">
-          <CustomerSideBar RefetchuserData={userData}/>
+          <CustomerSideBar />
         </div>
         <div className="col-lg-8">
-        <Outlet context={{ updateUserData }}/>
+        <Outlet />
         </div>  
         </div>
       </div >

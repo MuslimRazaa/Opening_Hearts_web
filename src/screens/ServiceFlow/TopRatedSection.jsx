@@ -3,6 +3,8 @@ import TopRatedProvidersCard from './cards/TopRatedProvidersCard'
 import { Link } from 'react-router-dom'
 import { topRatedServiceProvider } from '../../utils/api';
 import { Spinner } from 'react-bootstrap';
+import NoDataFound from '../../components/shared/noDataFound/NoDataFound';
+import LoadingComponents from '../../components/shared/loaders/LoadingComponents';
 
 function TopRatedSection() {
   const [topRatedService, setTopRatedService] = useState([]);
@@ -31,15 +33,16 @@ function TopRatedSection() {
 
 
 
-
-
-  return (
-    <>
-      {loading ?
-        <div className='centered-spinner'>
-        <Spinner animation="border" role="status" />
-        </div>
-        :
+  if (loading) {
+    return (
+      <>
+        <LoadingComponents />
+      </>
+    )
+  }
+  else {
+    return (
+      <>
         <div className="container">
           <div className="row">
             <div className="col-lg-9">
@@ -56,7 +59,7 @@ function TopRatedSection() {
               topRatedService.map((product) => (
                 <div className="col-lg-3" key={product.id}>
                   <TopRatedProvidersCard
-                    id = {product?.id}
+                    id={product?.id}
                     user_name={product?.vendor_service?.store_name}
                     user_image={product.cover_image}
                     user_flag={product?.vendor_service?.country}
@@ -67,15 +70,15 @@ function TopRatedSection() {
                 </div>
               ))
             ) : (
-              <p>No top-rated services available</p> // You can display a fallback message or an empty state here.
+              <NoDataFound title="No Data Found" /> // You can display a fallback message or an empty state here.
             )}
           </div>
         </div>
-      }
+      </>
 
-    </>
+    )
+  }
 
-  )
 }
 
 export default TopRatedSection

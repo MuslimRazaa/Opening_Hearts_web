@@ -6,13 +6,14 @@ import SingleServiceTopButtonsSlider from './SingleServiceTopButtonsSlider'
 import Footer from '../../../components/Layout/Footer'
 import SingleServiceFaqs from './SingleServiceFaqs'
 import { useLocation } from 'react-router-dom'
-import {BASE_URL} from '../../../utils/api'
+import { BASE_URL } from '../../../utils/api'
 import axios from 'axios'
 import { useState } from 'react'
+import FullScreenLoadingComponents from '../../../components/shared/loaders/FullScreenLoadingComponents'
 
 function SingleServiceDetail() {
-    const [subSerCat, setSubSerCat] = useState([]);
-    const [loading2, setLoading2] = useState(true);
+  const [subSerCat, setSubSerCat] = useState([]);
+  const [loading2, setLoading2] = useState(true);
 
   const location = useLocation();
 
@@ -24,32 +25,42 @@ function SingleServiceDetail() {
     if (!id) return;
     setLoading2(true);
     try {
-        const response = await axios.get(`${BASE_URL}service/category-by-subCategory?type=sub_category&category_id=${id}`);
-        setSubSerCat(response?.data?.data?.subCategory);
+      const response = await axios.get(`${BASE_URL}service/category-by-subCategory?type=sub_category&category_id=${id}`);
+      setSubSerCat(response?.data?.data?.subCategory);
     } catch (error) {
-        console.error('Error fetching subcategories:', error);
+      console.error('Error fetching subcategories:', error);
     } finally {
-        setLoading2(false);
+      setLoading2(false);
     }
-};
+  };
 
   useEffect(() => {
     fetchSubCatProduct();
-}, [id]);
+  }, [id]);
 
+  if (loading2) {
+    return (
+      <>
+        <Header />
+        <FullScreenLoadingComponents />
+        <Footer />
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+        <Header />
+        <SearchBar />
+        <SingleServiceBanner data={subSerCat} id={id} />
+        <SingleServiceTopButtonsSlider data={subSerCat} id={id} />
+        <SingleServiceFaqs />
+        <Footer />
 
+      </>
+    )
+  }
 
-  return (
-    <>
-      <Header/>
-      <SearchBar/>
-      <SingleServiceBanner data={subSerCat} id={id}/>
-      <SingleServiceTopButtonsSlider data={subSerCat} id={id}/>
-      <SingleServiceFaqs />
-      <Footer/>
-      
-    </>
-  )
 }
 
 export default SingleServiceDetail

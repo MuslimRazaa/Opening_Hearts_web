@@ -5,10 +5,12 @@ import right from "../../../media/images/rarrow.png";
 import PopularService from "./PopularService";
 import { Link } from "react-router-dom";
 import { popularService, serviceAllCategories } from "../../../utils/api";
+import LoadingComponents from "../../../components/shared/loaders/LoadingComponents";
 
-function ServiceCardSlider() {
+function ServiceCardSlider({title}) {
   const [popSer, setPopSer] = useState([]);
   const [popSer2, setPopSer2] = useState([]);
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -17,7 +19,7 @@ function ServiceCardSlider() {
     const { className, onClick } = props;
     return (
       <div className={`${className} my-custom-prev-arrow-service`} onClick={onClick}>
-        <img src={left} style={{ width: "15px", margin:"0px 28px",  padding: "0px 0px 0px 0px" }} />
+        <img src={left} style={{ width: "15px", margin: "0px 28px", padding: "0px 0px 0px 0px" }} />
       </div>
     );
   }
@@ -35,12 +37,14 @@ function ServiceCardSlider() {
 
 
   const fetchServiceAllCategories = async () => {
+    setLoading(true)
     try {
       const response = await serviceAllCategories();
       setPopSer2(response.data?.data?.categories); // Adjust based on API response structure
-
+      setLoading(false)
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setLoading(false)
     }
   };
 
@@ -48,11 +52,6 @@ function ServiceCardSlider() {
   useEffect(() => {
     fetchServiceAllCategories();
   }, []);
-
-  // useEffect(() => {
-  //   fetchPopularService();
-  // }, []);
-
 
   const settings = {
     dots: false,
@@ -65,19 +64,45 @@ function ServiceCardSlider() {
     nextArrow: <NextArrow /> // Attach custom NextArrow component
   };
 
-  return (
-    <div className="slider-wrapper">
-      <div className="slider-container-service">
-        <Slider {...settings}>
-          {popSer2?.map((popularServices) => (
-         
+
+  if (loading) {
+    return (
+      <>
+      <h2 className='service-main-heading'>{title}</h2>
+      <LoadingComponents />
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+      <div className="row">
+          <div className="col-lg-9">
+            <h2 className='service-main-heading'>{title}</h2>
+          </div>
+          <div className="col-lg-3">
+            <div className="service-card-heading-link">
+            <Link to='/popularService' ><h2>View All</h2></Link>
+            </div>
+          </div>
+        </div>
+      <div className="slider-wrapper">
+        <div className="slider-container-service">
+          <Slider {...settings}>
+            {popSer2?.map((popularServices) => (
+
               <PopularService id={popularServices?.id} title={popularServices.name} image={popularServices.main_image} description={popularServices.description} />
 
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </div>
-    </div>
-  );
+      </>
+    );
+  }
+
+
+
 }
 
 export default ServiceCardSlider;

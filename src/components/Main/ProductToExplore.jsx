@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL, { topRatedProducts } from '../../utils/api';
 import LoadingComponents from '../shared/loaders/LoadingComponents';
+import NoDataFound from '../shared/noDataFound/NoDataFound';
 
 
 function ProductToExplore() {
@@ -48,7 +49,7 @@ function ProductToExplore() {
           <div className="row">
             {loading ? (
               <LoadingComponents/>
-            ) : (
+            ) : products?.length > 0 ? (
               products?.map((product) => (
                 <div className="col-lg-3" key={product.id}>
                   <ProductCard
@@ -60,7 +61,7 @@ function ProductToExplore() {
                   />
                 </div>
               ))
-            )}
+            ) : <NoDataFound />}
           </div>
         </div>
       </div>

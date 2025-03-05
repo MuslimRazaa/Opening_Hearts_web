@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import BASE_URL, { topRatedCampaings } from '../../utils/api'
 import LoadingComponents from '../shared/loaders/LoadingComponents'
+import NoDataFound from '../shared/noDataFound/NoDataFound'
 
 function DonateForHuman() {
 
@@ -51,7 +52,7 @@ function DonateForHuman() {
 
               {loading ? (
                 <LoadingComponents />
-              ) : (
+              ) :  donation?.length > 0 ? (
                 donation?.slice(0, 4).map((product) => (
                   <div className="col-lg-3" key={product.id}>
                     <DonationCard
@@ -65,7 +66,7 @@ function DonateForHuman() {
                     />
                   </div>
                 ))
-              )}
+              ) : <NoDataFound />}
             </div>
           </div>
         </div>

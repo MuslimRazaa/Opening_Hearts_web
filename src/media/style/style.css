@@ -11850,7 +11850,7 @@ img.close-circle:hover {
 }
 
 form.payment-form-main-form {
-    background: #fff3f3;
+    /* background: #fff3f3; */
     padding: 20px;
     border: 1px solid #b5757538;
     margin: 10px 0px;
@@ -13155,4 +13155,30 @@ button.btn-cancel-security {
 }
 .emergency-fund-dolortext {
     margin: 0px 15px;
+}
+
+.phone-checkout input {
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-family: 'openSansL';
+    width: 300px;
+}
+
+.phone-checkout input:focus-visible {
+    outline: 1px solid orange;
+}
+button.add-address-checkout {
+    font-size: 12px;
+    padding: 0px 14px;
+    border: 1px solid #ff4700;
+    border-radius: 10px;
+    background: none;
+    font-family: 'openSans';
+    width: 100px;
+}
+button.add-address-checkout:hover {
+    background: linear-gradient(90deg, rgba(235, 0, 139, 1), rgba(241, 101, 34, 1));
+    color: white;
 }

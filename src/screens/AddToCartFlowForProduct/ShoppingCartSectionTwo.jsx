@@ -4,6 +4,8 @@ import ShoppingCartRight from './ShoppingCartRight'
 import { checkOutBothPrice, checkOutCart, checkOutServiceCart } from '../../utils/api'
 import ShoppingCartForService from './ShoppingCartForService';
 import { Spinner } from 'react-bootstrap';
+import LoadingComponents from '../../components/shared/loaders/LoadingComponents';
+import NoDataFound from '../../components/shared/noDataFound/NoDataFound';
 
 function ShoppingCartSectionTwo() {
   const [cartItems, setCartItems] = useState([]);
@@ -99,7 +101,7 @@ function ShoppingCartSectionTwo() {
                     ))}
                   </>)
                   :
-                  ( <p className="No-review-found">{loading ? <Spinner animation="border" role="status"/> : "No items in the cart"}</p>)
+                  ( <p className="No-review-found">{loading ? <LoadingComponents /> : <NoDataFound title="No Items in cart" />}</p>)
                 }
               </>)
 
@@ -118,7 +120,7 @@ function ShoppingCartSectionTwo() {
                     ))}
                   </>)
                   :
-                  (<p className="No-review-found">{loading2 ? <Spinner animation="border" role="status"/> : "No items in the cart"}</p>)
+                  (<p className="No-review-found">{loading2 ? <LoadingComponents /> : <NoDataFound title="No Items in cart" />}</p>)
                 }
               </>)}
           </div>

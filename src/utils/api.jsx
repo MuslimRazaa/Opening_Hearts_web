@@ -50,7 +50,7 @@ export const homeBanner = async () => await axios.get(`${BASE_URL}banner`, {head
 export const topRatedCategories = async () => await axiosInstance.get(`${BASE_URL}categories/home-category`);
 
 // top rated products 
-export const topRatedProducts = async (page, page_size) => await axiosInstance.get(`${BASE_URL}products/top-selling?page=${page}&page_size=${page_size}`);
+export const topRatedProducts = async () => await axiosInstance.get(`${BASE_URL}products/top-selling`);
 // top rated stores 
 export const topRatedStores = async () => await axiosInstance.get(`${BASE_URL}home/top-rated-store`);
 

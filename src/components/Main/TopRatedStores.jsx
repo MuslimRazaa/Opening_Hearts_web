@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import BASE_URL, { topRatedStores } from '../../utils/api'
 import axios from 'axios'
 import LoadingComponents from '../shared/loaders/LoadingComponents'
+import NoDataFound from '../shared/noDataFound/NoDataFound'
 
 
 function TopRatedStores() {
@@ -59,7 +60,7 @@ function TopRatedStores() {
 
               {loading ? (
                 <LoadingComponents />
-              ) : (
+              ) : store?.length > 0 ? (
                 store?.slice(0, 4).map((product) => (
                   <div className="col-lg-3" key={product.id}>
                     <StoreCard
@@ -72,7 +73,7 @@ function TopRatedStores() {
                     />
                   </div>
                 ))
-              )}
+              ) : <NoDataFound />}
             </div>
           </div>
         </div>

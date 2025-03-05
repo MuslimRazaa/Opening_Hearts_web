@@ -1,40 +1,96 @@
 import React, { useEffect, useState } from 'react'
 import stripeS from '../../media/images/stripe.png'
-import square from '../../media/images/square.png'
 import rightw from '../../media/images/tic.png'
-import master from '../../media/images/master.png'
-import paynieer from '../../media/images/poynier.png'
-import paypal from '../../media/images/paypal.png'
 import Modal from '../../components/Layout/Modal'
-import CheckoutLeft from './CheckoutLeft'
-import s1 from '../../media/images/s3.png'
 import baseline from '../../media/images/ic_baseline-discount.png'
 import right from '../../media/images/rarrow.png'
 import { Link } from 'react-router-dom'
-import BASE_URL, { buyNowGetCart, checkOutBothPrice, checkOutCart, checkOutServiceCart, order, STRIPE_PUBLISH_KEY } from '../../utils/api'
-
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import BASE_URL, { checkOutBothPrice, checkOutCart, checkOutServiceCart, getDefaultAddress, order, STRIPE_PUBLISH_KEY } from '../../utils/api'
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import i from '../../media/images/i.png'
 import Swal from 'sweetalert2'
 import { Spinner } from 'react-bootstrap'
+import { useUserData } from '../../components/shared/helperMethod'
+import NoDataFound from '../../components/shared/noDataFound/NoDataFound'
+import { useLoadScript, Autocomplete } from '@react-google-maps/api';
+import { Formik, Form, Field } from "formik";
+import { loadStripe } from '@stripe/stripe-js'
 
-
+const libraries = ["places"];
 const stripePromise = loadStripe(STRIPE_PUBLISH_KEY);
-
 
 function CheckoutSection2() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cartItems, setCartItems] = useState([]);
+    const [addAddress, setAddAddress] = useState(false);
+    const [defaultAddress, setDefaultAddress] = useState();
     const [cartItemPrices, setCartItemPrices] = useState();
     const [loading, setLoading] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [serviceCartItems, setServiceCartItems] = useState([]);
-
     const [error, setError] = useState("");
-
     const stripe = useStripe();
     const elements = useElements();
+    const userfetch = useUserData()
+    const [autocomplete, setAutocomplete] = useState(null);
+    const [savedAddress, setSavedAddress] = useState("");
+    const googlePlacesApiKey = "AIzaSyDg6Ci3L6yS5YvtKAkWQjnodGUtlNYHw9Y";
+
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: googlePlacesApiKey,
+        libraries,
+    });
+
+    const handleAutocompleteLoad = (autocompleteInstance) => {
+        setAutocomplete(autocompleteInstance);
+    };
+
+    const handlePlaceChanged = (setValues) => {
+        if (autocomplete) {
+            const place = autocomplete.getPlace();
+            if (place) {
+                const address = place.formatted_address || "";
+                const lat = place.geometry?.location?.lat() || "";
+                const lng = place.geometry?.location?.lng() || "";
+                const addressComponents = place.address_components || [];
+                let country = "";
+                let city = "";
+                let zip_code = "";
+
+                // Extract address components
+                addressComponents.forEach((component) => {
+                    const types = component.types;
+                    if (types.includes("country")) {
+                        country = component.long_name;
+                    }
+                    if (types.includes("locality")) {
+                        city = component.long_name;
+                    }
+                    if (types.includes("postal_code")) {
+                        zip_code = component.long_name;
+                    }
+                });
+
+                setSavedAddress({
+                    address,
+                    latitude: lat,
+                    longitude: lng,
+                });
+
+
+                // ✅ Update all values at once without delay
+                setValues({
+                    address,
+                    lat,
+                    lng,
+                    city,
+                    country,
+                    zip_code,
+                });
+            }
+        }
+    };
+
 
     const cardElementOptions = {
         style: {
@@ -53,6 +109,21 @@ function CheckoutSection2() {
         },
     };
 
+    const fetchGetDefaultAddress = async () => {
+        setLoading2(true)
+        try {
+            const response = await getDefaultAddress();
+            setDefaultAddress(response?.data?.data); // Update state with cart items
+            setLoading2(false)
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+            setLoading2(false)
+        }
+    };
+
+    const handleAddAddress = () => {
+        setAddAddress(true)
+    }
     const fetchCartItems = async () => {
         setLoading2(true)
         try {
@@ -94,7 +165,6 @@ function CheckoutSection2() {
     const handleOrderNowClick = () => {
         setIsModalVisible(true);
     };
-
     const handleCloseModal = () => {
         setIsModalVisible(false);
     };
@@ -131,10 +201,9 @@ function CheckoutSection2() {
                 return;
             }
             const data = {
-                address: 'united',
-                phone: "02231222123",
-                latitude: '38.7946° N',
-                longitude: '106.5348° W',
+                address: savedAddress?.address,
+                latitude: savedAddress?.latitude,
+                longitude: savedAddress?.longitude,
                 payment_intent: paymentMethod?.id,
                 web_type: 1,
             }
@@ -168,6 +237,7 @@ function CheckoutSection2() {
         fetchCartItems();
         fetchServiceCartItems();
         fetchCheckOutBothPrice();
+        fetchGetDefaultAddress();
     }, []);
 
     return (
@@ -187,17 +257,61 @@ function CheckoutSection2() {
                                 <h2>Shipping Details</h2>
                                 <div className="full-name-checkout">
                                     <p>Full Name</p>
-                                    <h5 className="checkout-fullname">Shipping USER NAME</h5>
+                                    <h5 className="checkout-fullname">{userfetch?.first_name} {userfetch?.last_name}</h5>
                                 </div>
                                 <div className="phone-checkout">
-                                    <p>Phone</p>
-                                    <h5 className="checkout-phone">{'01-XXXX-XXXX'}</h5>
+                                    <p>Email</p>
+                                    <h5 className="checkout-phone">{userfetch?.email}</h5>
                                 </div>
-                                <div className="Address-checkout">
-                                    <p>Address</p>
-                                    <h5 className="checkout-Address">Shipping USER ADDRESS</h5>
-                                </div>
-                                <p className="checkout-change-address">Change Address</p>
+
+
+                                {defaultAddress?.length > 0 &&
+                                    (<div className="Address-checkout">
+                                        <p>Address</p>
+                                        <h5 className="checkout-Address">{defaultAddress?.address}</h5>
+                                    </div>)}
+                                {defaultAddress?.length > 0 ? (<Link to="" ><p className="checkout-change-address">Change Address</p></Link>) : <Link to="" ><p onClick={handleAddAddress} className="checkout-change-address">+ Add Address</p></Link>}
+
+                                {addAddress && (
+                                    <Formik
+                                        initialValues={{
+                                            address: "",
+                                            lat: "",
+                                            lng: "",
+                                            city: "",
+                                            country: "",
+                                            zip_code: "",
+                                        }}
+                                        onSubmit={(values) => {
+                                            console.log(savedAddress, "sssaaaaavvvv")
+                                        }}
+                                    >
+                                        {({ setValues, values }) => (
+                                            <Form>
+                                                <div className="phone-checkout">
+                                                    {isLoaded ? (
+                                                        <Autocomplete
+                                                            onLoad={handleAutocompleteLoad}
+                                                            onPlaceChanged={() => handlePlaceChanged(setValues)} // Passing setValues directly
+                                                        >
+                                                            <Field type="text" name="address" placeholder="Search your address" />
+                                                        </Autocomplete>
+                                                    ) : (
+                                                        <p>Loading...</p>
+                                                    )}
+                                                </div>
+                                                {values.address && (
+                                                    <div className="phone-checkout">
+                                                        <p>Address</p>
+                                                        <p>{values.address}</p>
+                                                    </div>
+                                                )}
+                                            </Form>
+                                        )}
+                                    </Formik>
+                                )}
+
+
                             </div>
 
                             <div className="payment-form">
@@ -211,60 +325,16 @@ function CheckoutSection2() {
                                     <div style={{ padding: "10px", border: "1px solid #ccc", borderRadius: "5px" }}>
                                         <CardElement options={cardElementOptions} />
                                     </div>
-                                    {error && <p style={{color: "red"}}>{error}</p>}
+                                    {error && <p style={{ color: "red" }}>{error}</p>}
                                     <div className="shopping-cart-details-button" style={{ marginTop: "15px" }}>
                                         <button type="submit" disabled={!stripe || loading}>
                                             {loading ? <Spinner animation="border" role="statuss" size="sm" /> : "Pay Now"}
                                         </button>
                                     </div>
                                 </form>
-
-                                <div className="add-billing-address">
-                                    <h3>Billing Address</h3>
-                                    <div className="d-flex align-items-center gap-20">
-                                        <p>Jane Smith, 987 Maple Avenue, Springfield, IL 62704, USA</p>
-                                        {/* <span className="edit-billing-address">Edit</span> */}
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
-
-
-
-
-                        <div className="billing-container">
-                            {/* Billing Information Section */}
-                            <div className="billing-info">
-                                <h2>Billing Information</h2>
-                                <div className="row">
-                                    <div className="col-lg-6">
-                                        <p>
-                                            Boost brand exposure during our biggest sourcing events and online
-                                            trade shows, including Super September and March Expo.
-                                        </p>
-                                    </div>
-                                    <div className="col-lg-6">
-                                        <div className="add-details-button">
-                                            <Link to="/addBillingDetails" style={{ textDecoration: "none" }} ><button className="add-details-button">Add Details</button></Link>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Payment Options Section */}
-                            <div className="payment-options">
-                                <label>
-                                    <input type="radio" name="payment-method" /> Paypal
-                                </label>
-                                {/* <label>
-                                    <input type="radio" name="payment-method" /> Google pay
-                                </label>
-                                <label>
-                                    <input type="radio" name="payment-method" /> Apple pay
-                                </label> */}
-                            </div>
-                        </div>
                     </div>
                     <div className="col-lg-4">
                         {/* <CheckoutRight /> */}
@@ -311,22 +381,7 @@ function CheckoutSection2() {
                             </div>
                             <div className="shopping-cart-details-payment-cards" style={{ justifyContent: "left" }}>
                                 <img src={stripeS} />
-                                {/* <img src={square} />
-                                <img src={master} />
-                                <img src={paynieer} />
-                                <img src={paypal} />
-                                <img src={paypal} />
-                                <img src={master} /> */}
-
                             </div>
-                            {/* <div className="shopping-cart-details-button">
-                                <button onClick={handleOrderNowClick} >Order Now</button>
-                                  {clientSecret && <Elements stripe={stripePromise} options={{clientSecret}}>
-                                        <div className="stripe-payment-container">
-                                            <PaymentElement id="payment-element" />
-                                        </div>
-                                    </Elements>}
-                            </div> */}
                             <Modal isVisible={isModalVisible} onClose={handleCloseModal}>
                                 <div className='modal-content-here'>
                                     <div className="modal-success-image">
@@ -354,7 +409,7 @@ function CheckoutSection2() {
                             <Spinner animation="border" role="status" />
                         </div>
                             :
-                            <div className='cart-y-scroll'>
+                            cartItems?.length > 0 || serviceCartItems?.length > 0 ? (<div className='cart-y-scroll'>
                                 {/* Review Product & Shipping Section */}
                                 {cartItems?.map((cart, index) => (
                                     <div className="review-shipping" key={index}>
@@ -373,11 +428,6 @@ function CheckoutSection2() {
                                                         <span className="discount-price">${item?.product?.discount_price > 0 ? item?.product?.discount_price : item?.product?.price}</span>{" "}
                                                         <span className="original-price">${item?.product?.price}</span>
                                                     </p>
-                                                    {/* <div className="billing-info-colors">
-                                        <p>Colours:</p><span className="billing-info-color-value"></span>
-                                        <p>Size:</p> <span className="billing-info-size-value">M</span>
-                                    </div>
-                                    <p>QTY: 01</p> */}
                                                 </div>
                                             </div>
                                         ))}
@@ -407,11 +457,6 @@ function CheckoutSection2() {
                                                         <span className="discount-price">${item?.price}</span>{" "}
                                                         <span className="original-plan">Plan: {item?.serviceplan?.plan_type || "NA"}</span>
                                                     </p>
-                                                    {/* <div className="billing-info-colors">
-                                        <p>Colours:</p><span className="billing-info-color-value"></span>
-                                        <p>Size:</p> <span className="billing-info-size-value">M</span>
-                                    </div>
-                                    <p>QTY: 01</p> */}
                                                 </div>
                                             </div>
                                         ))}
@@ -420,7 +465,7 @@ function CheckoutSection2() {
                                         </div>
                                     </div>
                                 ))}
-                            </div>}
+                            </div>) : <NoDataFound />}
                     </div>
                 </div>
                 <div className="col-lg-12">

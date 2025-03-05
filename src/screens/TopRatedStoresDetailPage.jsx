@@ -9,6 +9,8 @@ import Newsletter from '../components/Main/Newsletter';
 import Footer from '../components/Layout/Footer';
 import StoreCard from '../components/Main/StoreCard';
 import { topRatedStores } from '../utils/api';
+import LoadingComponents from '../components/shared/loaders/LoadingComponents';
+import NoDataFound from '../components/shared/noDataFound/NoDataFound';
 
 function TopRatedStoresDetailPage() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -75,8 +77,8 @@ function TopRatedStoresDetailPage() {
                         </div>
 
                         {loading ? (
-                            <p>Loading...</p>
-                        ) : displayedProducts.map((product) => (
+                            <LoadingComponents />
+                        ) : store?.length > 0 ? (displayedProducts.map((product) => (
                             <div key={product.id} className="col-lg-4">
                                 <div className="store-detail-page-card-wrapper">
                                     <StoreCard
@@ -85,10 +87,11 @@ function TopRatedStoresDetailPage() {
                                         name={product.shop_name}
                                         rating={product.rating}
                                         vImage={product?.main_image}
+                                        guid={product?.guid}
                                     />
                                 </div>
                             </div>
-                        ))}
+                        ))) : <NoDataFound title={"No Data Found"}/>}
                     </div>
                     <div className='pagination-wrapper-detail-page'>
                         <Pagination

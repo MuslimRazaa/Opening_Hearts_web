@@ -12,7 +12,7 @@ import { Autocomplete, useLoadScript } from '@react-google-maps/api'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Swal from 'sweetalert2'
 import { toast, ToastContainer } from 'react-toastify'
-import { useNavigate, useOutletContext } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LoadingComponents from '../../../components/shared/loaders/LoadingComponents'
 
 
@@ -39,11 +39,9 @@ const CustomerSetting = () => {
         image: ""
     });
     const navigate = useNavigate()
-
-
-    const { updateUserData } = useOutletContext();
-
-    console.log(updateUserData(), "--------------update User Data")
+    const { search } = useLocation();
+    const params = new URLSearchParams(search);
+    const changeAddress = params.get('changeAddress');
 
     const FetchGetProfileDetails = async () => {
         setProfileLoading(true)
@@ -300,6 +298,7 @@ const CustomerSetting = () => {
         fetchAddress();
         fetchGetDefaultAddress();
         FetchGetProfileDetails();
+       
     }, [])
 
     return (

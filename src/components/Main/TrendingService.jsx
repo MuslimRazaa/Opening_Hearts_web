@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import BASE_URL, { topRatedService } from '../../utils/api'
 import axios from 'axios'
 import LoadingComponents from '../shared/loaders/LoadingComponents'
+import NoDataFound from '../shared/noDataFound/NoDataFound'
 
 
 function TrendingService() {
@@ -50,7 +51,7 @@ function TrendingService() {
             <div className="row">
             {loading ? (
                 <LoadingComponents/>
-            ) : (
+            ) : service?.length > 0 ? (
               service?.slice(0, 4).map((product) => (
                 <div className="col-lg-3" key={product.id}>
                   <ServicesCard
@@ -63,7 +64,7 @@ function TrendingService() {
                   />
                 </div>
               ))
-            )}
+            ) : <NoDataFound />}
             </div>
           </div>
         </div>

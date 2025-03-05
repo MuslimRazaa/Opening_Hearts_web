@@ -7,17 +7,7 @@ function TrendinService() {
 
     <div className='popula-service-card-section-main'>
       <div className="container">
-        <div className="row">
-          <div className="col-lg-9">
-            <h2 className='service-main-heading'>Trending Service</h2>
-          </div>
-          <div className="col-lg-3">
-            <div className="service-card-heading-link">
-              <Link to='/popularService' ><h2>View All</h2></Link>                
-              </div>
-          </div>
-        </div>
-        <ServiceCardSlider />
+        <ServiceCardSlider title="Trending Service" />
       </div>
     </div>
   )

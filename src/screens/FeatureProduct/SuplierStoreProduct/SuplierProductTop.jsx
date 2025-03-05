@@ -4,6 +4,7 @@ import Filter from '../Filter'
 import FeatureProductCard from '../../../components/Main/FeatureProductCard';
 import Pagination from '../../../components/Main/Pagination';
 import ifoneee from "../../../media/images/Tem_Images/ifoneee.svg";
+import NoDataFound from '../../../components/shared/noDataFound/NoDataFound';
 
 function SuplierProductTop({vendorProducts, guid}) {
     const [activeButton, setActiveButton] = useState();
@@ -12,11 +13,9 @@ function SuplierProductTop({vendorProducts, guid}) {
     const itemsPerPage = 20;
     const totalItems = 150; // Total number of products
 
-    // const products = Array.from({ length: totalItems }, (_, i) => ({
-    //     id: i + 1,
-    //     name: `Product ${i + 1}`,
-    //     image: ifoneee,
-    //   }));
+  
+    console.log(vendorProducts, "products on suplier")
+
     // Calculate the products to display for the current page
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -25,6 +24,7 @@ function SuplierProductTop({vendorProducts, guid}) {
     const handleButtonClick = (buttonName) => {
         setActiveButton(buttonName);
       };
+
   return (
     <div className='container'>
       <div className="row">
@@ -103,15 +103,17 @@ function SuplierProductTop({vendorProducts, guid}) {
           </div>
         </div>
         <div className="col-lg-9">
-        <div className="row justify-content-start">
-
+        {vendorProducts?.length > 0 ? 
+        (<div className="row justify-content-start">
         {displayedProducts?.map((product) => (
 
                   <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product.id}>
                     <FeatureProductCard image={product?.media[0]?.original_url} name={product?.title} Category={product?.category?.name} price={product?.price} discounted_price={product?.discount_price} guid={product?.guid} />
                   </div>
                 ))}
-        </div>
+        </div>) : 
+        <NoDataFound title="No data Found" />
+        }
         </div>
         <div className="feature-product-paginantion">
               <Pagination

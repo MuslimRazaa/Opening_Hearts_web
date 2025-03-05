@@ -10,6 +10,7 @@ import SingleServiceFaqs from '../SingleServiceDetailPage/SingleServiceFaqs'
 import { addServiceToCart, serviceDetail } from '../../../utils/api'
 import { useLocation } from 'react-router-dom'
 import ServicePackageTable from './ServicePackageTable'
+import FullScreenLoadingComponents from '../../../components/shared/loaders/FullScreenLoadingComponents'
 
 function ServiceSellProfile() {
   const [serviceDetailPage, setServiceDetailPage] = useState({});
@@ -41,19 +42,32 @@ function ServiceSellProfile() {
   }, []);
 
 
-  return (
-    <div>
-        <Header/>
-        <ServiceSellerProfileTop data={serviceDetailPage?.data} available={true}/>
-        <ServiceSellerGallery data_review={serviceDetailPage?.data}  data={serviceDetailPage?.data} />
-        <AboutMethew data={serviceDetailPage?.data}/>
-        <GetToKnowAbtMethew data={serviceDetailPage?.data}/>
-        <ServicePackageTable/>
-        <SingleServiceFaqs data={serviceDetailPage?.data}/>
-        {/* <OtherRecomendationsForSeller/> */}
-        <Footer/>
-    </div>
-  )
+  if(loading){
+    return(
+      <>
+      <Header/>
+      <FullScreenLoadingComponents />
+      <Footer/>
+      </>
+    )
+  }
+
+  else{
+    return (
+      <div>
+          <Header/>
+          <ServiceSellerProfileTop data={serviceDetailPage?.data} available={true}/>
+          <ServiceSellerGallery data_review={serviceDetailPage?.data}  data={serviceDetailPage?.data} />
+          <AboutMethew data={serviceDetailPage?.data}/>
+          <GetToKnowAbtMethew data={serviceDetailPage?.data}/>
+          <ServicePackageTable/>
+          <SingleServiceFaqs data={serviceDetailPage?.data}/>
+          {/* <OtherRecomendationsForSeller/> */}
+          <Footer/>
+      </div>
+    )
+  }
+ 
 }
 
 export default ServiceSellProfile

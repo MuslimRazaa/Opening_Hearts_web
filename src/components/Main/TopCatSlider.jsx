@@ -5,6 +5,7 @@ import left from "../../media/images/left-arrow-svgrepo-com.svg";
 import right from "../../media/images/right-arrow-svgrepo-com.svg";
 import { topRatedCategories } from "../../utils/api";
 import LoadingComponents from "../shared/loaders/LoadingComponents";
+import NoDataFound from "../shared/noDataFound/NoDataFound";
 
 function TopCatSlider() {
   const [categories, setCategories] = useState([]);
@@ -72,14 +73,15 @@ function TopCatSlider() {
   else{
     return (
       <div className="slider-wrapper">
+       {categories?.length > 0 ?
         <div className="slider-container">
           <Slider {...settings}>
-            {categories.map((product) => (
+            {categories?.map((product) => (
               <div>
               <TopCatagoriesCard image={product?.media[0]?.original_url } txt={product?.name}/>
             </div>))}
           </Slider>
-        </div>
+        </div> : <NoDataFound />}
       </div>
     );
   }

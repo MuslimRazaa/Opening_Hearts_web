@@ -10,6 +10,9 @@ import Pagination from '../components/Main/Pagination';
 import Newsletter from '../components/Main/Newsletter';
 import Footer from '../components/Layout/Footer';
 import { topRatedProducts } from '../utils/api';
+import HeaderTop from '../components/Layout/HeaderTop';
+import LoadingComponents from '../components/shared/loaders/LoadingComponents';
+import NoDataFound from '../components/shared/noDataFound/NoDataFound';
 
 function ProductToExploreDetail() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -42,55 +45,76 @@ function ProductToExploreDetail() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const displayedProducts = allProducts?.slice(startIndex, endIndex);
-    return (
-        <div className='product-to-explore-detail'>
+    
+    
+    if(loading){
+        return(
+            <>
             <Header />
-            <div className="container">
-                <div className='cards-detail-page-top'>
-                    <div className="detail-page-button">
-                        <button>Sort by</button>
-                        <img src={sort} alt="Sort icon" />
-                    </div>
-                    <div className='detail-page-search-bar'>
-                        <img src={search} alt="Search icon" />
-                        <input type='search' placeholder='Search..' />
-                    </div>
-                </div>
-                <div className="detail-page-cards-section">
-                    <div className="row">
-                        <div className="product-section-title d-flex justify-content-space-between align-items-center">
-                            <div className="col-lg-10 d-flex justify-content-left gap-20">
-                                <img src={group} alt="Group icon" />
-                                <h1 style={{ margin: "0" }}>Top Products to Explore</h1>
-                            </div>
-                            <div className="col-lg-2">
-                                <div className="detail-page-title-right">
-                                    <h3>({totalItems.toLocaleString()} Products Available)</h3>
-                                </div>
-                            </div>
-                        </div>
-
-                        {displayedProducts?.map((product) => (
-                            <div key={product.id} className="col-lg-3">
-                                <div className="product-detail-page-card-wrapper">
-                                    <ProductCard image={product.media?.[0]?.original_url || 'fallback-image-url'} name={product.title} price={product?.price} discounted_price={product?.discount_price} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className='pagination-wrapper-detail-page'>
-                        <Pagination
-                            totalItems={totalItems}
-                            itemsPerPage={itemsPerPage}
-                            onPageChange={setCurrentPage}
-                        />
-                    </div>
-                </div>
-            </div>
-            <Newsletter />
+            <LoadingComponents />
             <Footer />
-        </div>
-    );
+            </>
+        )
+    }
+    else{
+        return (
+            <div className='product-to-explore-detail'>
+                <Header />
+                <div className="container">
+                    <div className='cards-detail-page-top'>
+                        <div className="detail-page-button">
+                            <button>Sort by</button>
+                            <img src={sort} alt="Sort icon" />
+                        </div>
+                        <div className='detail-page-search-bar'>
+                            <img src={search} alt="Search icon" />
+                            <input type='search' placeholder='Search..' />
+                        </div>
+                    </div>
+                    <div className="detail-page-cards-section">
+                        <div className="row">
+                            <div className="product-section-title d-flex justify-content-space-between align-items-center">
+                                <div className="col-lg-10 d-flex justify-content-left gap-20">
+                                    <img src={group} alt="Group icon" />
+                                    <h1 style={{ margin: "0" }}>Top Products to Explore</h1>
+                                </div>
+                                <div className="col-lg-2">
+                                    <div className="detail-page-title-right">
+                                        <h3>({totalItems.toLocaleString()} Products Available)</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            {allProducts?.length > 0 ?
+                            (<>
+                            {displayedProducts?.map((product) => (
+                                <div key={product.id} className="col-lg-3">
+                                    <div className="product-detail-page-card-wrapper">
+                                        <ProductCard image={product.media?.[0]?.original_url || 'fallback-image-url'} name={product.title} price={product?.price} discounted_price={product?.discount_price} />
+                                    </div>
+                                </div>
+                            ))}
+                        </>) : 
+                        <NoDataFound />
+                        }
+                        
+                        </div>
+                        <div className='pagination-wrapper-detail-page'>
+                            <Pagination
+                                totalItems={totalItems}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={setCurrentPage}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <Newsletter />
+                <Footer />
+            </div>
+        );
+    }
+    
+    
+   
 }
 
 export default ProductToExploreDetail;

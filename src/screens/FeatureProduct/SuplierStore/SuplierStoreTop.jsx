@@ -162,7 +162,7 @@ function SuplierStoreTop({id, guid , vendor}) {
      <div className="suplier-store-navigation">
       <div className="container">
         <ul>
-           <Link to="/featureProduct" style={{textDecoration: "none"}}> <li>Home</li></Link>
+           <Link to={`/SuplierStore?guid=${guid}`} style={{textDecoration: "none"}}> <li>Home</li></Link>
            <Link to={`/SuplierStoreProduct?guid=${guid}`} style={{textDecoration: "none"}}> <li>Product</li></Link>
         </ul>
       </div>
