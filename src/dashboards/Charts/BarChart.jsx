@@ -101,7 +101,7 @@ const BarChart = () => {
         <div
             style={{
                 padding: "18px", // Ensures spacing inside the container
-                boxShadow: "0px 4px 4px 0px #00000040",
+                boxShadow: "0px 0px 4px 2px #00000040",
                 borderRadius: "10px", // Rounded corners
                 background: "#fff", // Background color
                 height: "300px", // Adjust height as needed

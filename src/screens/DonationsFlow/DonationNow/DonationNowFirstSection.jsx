@@ -7,7 +7,9 @@ import fundlogo from '../../../media/images/Funding Circle log.png'
 import { Link } from 'react-router-dom'
 import TopCatagories from '../../../components/Main/TopCatagories'
 import DonateForHuman from '../../../components/Main/DonateForHuman'
-import { donationsHomeOrganization, newsAndMedia, ourPartners } from '../../../utils/api'
+import { donationsHomeOrganization, newsAndMedia, organizationCount, ourPartners } from '../../../utils/api'
+import NoDataFound from '../../../components/shared/noDataFound/NoDataFound'
+import LoadingComponents from '../../../components/shared/loaders/LoadingComponents'
 
 
 function DonationNowFirstSection() {
@@ -15,7 +17,9 @@ function DonationNowFirstSection() {
     const [organizations, setOrganizations] = useState([]);
     const [ourPartner, setOurPartner] = useState([]);
     const [newsMedia, setNewsMedia] = useState([]);
+    const [orgCount, setOrgCount] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingCount, setLoadingCount] = useState(true);
     const [loading2, setLoading2] = useState(true);
 
     const fetchOrganization = async () => {
@@ -43,6 +47,17 @@ function DonationNowFirstSection() {
     };
 
 
+    const fetchOrganizationCount = async () => {
+        setLoadingCount(true);
+        try {
+            const response = await organizationCount();
+            setOrgCount(response?.data?.data); // Adjust based on API response structure
+        } catch (error) {
+            console.error('Error fetching top-rated products:', error);
+        } finally {
+            setLoadingCount(false);
+        }
+    };
     const fetchNewsAndMedia = async () => {
         setLoading(true);
         try {
@@ -59,6 +74,7 @@ function DonationNowFirstSection() {
         fetchOrganization();
         fetchOurPartners();
         fetchNewsAndMedia();
+        fetchOrganizationCount();
     }, []);
 
 
@@ -104,32 +120,35 @@ function DonationNowFirstSection() {
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-5">
+                    {loadingCount ? 
+                    <LoadingComponents /> :
+                    orgCount  ?
+                    (<div className="row mt-5">
                         <div className="col-md-3">
                             <div className="camp-980">
-                                <h1>980</h1>
+                                <h1>{orgCount?.campaign_count}</h1>
                                 <p>Campaigns</p>
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="camp-980">
-                                <h1>$500M</h1>
+                                <h1>${Math.floor(orgCount?.amount)}</h1>
                                 <p>Donations</p>
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="camp-980">
-                                <h1>250K</h1>
+                                <h1>{orgCount?.donors_count}</h1>
                                 <p>Donors</p>
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="camp-980">
-                                <h1>584</h1>
+                                <h1>{orgCount?.organization_count}</h1>
                                 <p>Organizations</p>
                             </div>
                         </div>
-                    </div>
+                    </div>) : <NoDataFound title={"No data found"}/>}
                     <div className="row">
                         <div className="col-md-12">
                             <div className="spector-img-sec">
@@ -176,42 +195,53 @@ function DonationNowFirstSection() {
             <div className="donation-3rd-sec">
                 <div className="container">
                     <div className="row">
-                        <div className="organizations">
-                            <h2>
-                                Organizations
-                            </h2>
-                            {/* <Link to="">View All</Link> */}
+                        <div className="how-we-work">
+                            <h1>Organizations</h1>
+                            <p>Explore organizations and stay updated with their latest campaigns and events. Follow your favorite organizations to support their causes and participate in upcoming activities.</p>
                         </div>
-                        <div className="organizations-card-sec">
-                            <div className="row">
-                            {organizations?.slice(0, 2).map((item, index) => (
-                                item ? ( <div className="col-md-6">
-                                        <div className="organization-card">
-                                            <div className="organization-information">
-                                                <p>{item?.organization_name}</p>
-                                                <img width={149.5} src={item?.profile_image} alt="" srcset="" />
+                        {loading2 ?
+                            <LoadingComponents />
+                            :
+                            (<>
+                                {organizations?.slice(0, 3).map((item, index) => (
+                                    organizations?.length > 0 ?
+                                        (<div className="col-lg-4 my-4">
+                                            <div className="org-profile-card">
+
+                                                <div className='org-profile-name'>
+                                                    <div className='org-profile-img'>
+                                                        <img src={item?.profile_image} />
+                                                    </div>
+                                                    <div className="org-profile-name">
+                                                        <div className='org-profile-name-wrapper'>
+                                                            <h2>{item?.organization_name}</h2>
+                                                            <span>{item?.organization_type}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="org-profile-data">
+                                                    <p style={{ color: 'orangered', fontWeight: '600', }}>Loc icon:<span> {item?.street_address}</span></p>
+                                                    <p style={{ color: 'orangered', fontWeight: '600', }}>EIN icon:<span> {item?.phone}</span></p>
+                                                    <p style={{ color: 'orangered', fontWeight: '600', }}>web icon:<span> {item?.website}</span></p>
+                                                </div>
+
+                                                <div className='vist-org-btn'>
+                                                    <Link to={`/funding-cycle?id=${item?.id}`} > <button>Follow</button> </Link>
+                                                </div>
+
                                             </div>
-                                            <div className="organization-adress">
-                                                <p style={{ color: 'orangered', fontWeight: '700', }}>LOCATION:<span>{item?.street_address}</span></p>
-                                                <p style={{ color: 'orangered', fontWeight: '700', }}>WEBSITE:<span> {item?.website}</span></p>
-                                                {/* <p style={{ color: 'orangered', fontWeight: '700', }}>FACEBOOK:<span> Facebook Page</span></p>
-                                                <p style={{ color: 'orangered', fontWeight: '700', }}>TWITTER:<span> @GlobalGiving</span></p> */}
-                                            </div>
-                                        </div>
-                                    </div>)
-                                    : "null" ))}
-                            </div>
-                        </div>
+                                        </div>) :
+                                        <NoDataFound title={"No Data Found"} />
+                                ))}
+                            </>
+                            )}
+
                     </div>
                 </div>
             </div>
             <TopCatagories />
             <DonateForHuman />
-
-
-
-
-
             <div className="our-partners">
                 <div className="container">
                     <div className="row">
@@ -225,7 +255,6 @@ function DonationNowFirstSection() {
 
                     </div>
                     <div className="row justify-content-center">
-
                         {ourPartner?.map((logo, index) => (
                             <div className="col-md-2 my-auto">
                                 <div className="our-partner-img-sec">
@@ -248,14 +277,28 @@ function DonationNowFirstSection() {
                                     </h1>
                                 </div>
                                 <div className="row">
-                                    {newsMedia?.map((item) => (
+                                    {/* {newsMedia?.map((item) => (
                                         <div className="col-md-4">
                                             <div className="media-new-card">
                                                 <img src={item?.main_image} alt="" />
                                                 <h2>{item?.title}<button style={{ marginLeft: '8px' }} type='button' className='btn btn-viewall'>Learn More</button></h2>
                                             </div>
                                         </div>
+                                    ))} */}
+                                    {newsMedia?.map((item) => (
+                                            <div className="col-md-4">
+                                                <div className="card-how-it-work">
+                                                    <div>
+                                                        <img src={item?.main_image} alt=""/>
+                                                    </div>
+                                                    <h3>
+                                                        {item?.title}
+                                                    </h3>
+                                                    <p>Nonprofits around the world apply and join opening heart to access more funding, to build new skills, and to make important connections.</p>
+                                                </div>
+                                            </div>
                                     ))}
+
                                 </div>
                             </div>
                         </div>

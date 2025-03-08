@@ -10,32 +10,32 @@ import { getCampaign } from '../../../utils/api'
 
 
 function FoodDriveFirstSec() {
-   const [campaignDetailPage, setCampaignDetailPage] = useState();
-    const [loading, setLoading] = useState(false);
-  
-     const location = useLocation();
-    
-      const queryParams = new URLSearchParams(location.search);
-      const id = queryParams.get('campaign_id');
-    
-    const fetchCampaignDetail = async () => {
-      setLoading(true)
-      try {
-        const response = await getCampaign(id);
-        setCampaignDetailPage(response?.data?.data); // Adjust based on API response structure
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      } finally {
-        setLoading(false)
-      }
-    };
-  
-    useEffect(() => {
-      fetchCampaignDetail();
-    }, []);
-  
-  
-  
+  const [campaignDetailPage, setCampaignDetailPage] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('campaign_id');
+
+  const fetchCampaignDetail = async () => {
+    setLoading(true)
+    try {
+      const response = await getCampaign(id);
+      setCampaignDetailPage(response?.data?.data); // Adjust based on API response structure
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    fetchCampaignDetail();
+  }, []);
+
+
+
   return (
     <>
       <div className='donate-food-drive-sec1'>
@@ -61,9 +61,9 @@ function FoodDriveFirstSec() {
                   threaten the lives of people across the country. Since April 2023, thousands of Sudanese have been killed,
                   and millions more injured and displaced in the fighting. Your donation to the Sudan Emergency Fund
                   will provide emergency relief, food, water, medicine, and other essential supplies to impacted communities.</p>*/}
-              </div> 
-                <div className="card-food-img-i" dangerouslySetInnerHTML={{ __html: campaignDetailPage?.desctiption }}>
-                </div>
+              </div>
+              <div className="card-food-img-i" dangerouslySetInnerHTML={{ __html: campaignDetailPage?.desctiption }}>
+              </div>
               <div className="food-donation-card">
                 {/* <h3>How Your Donation Will Be Used</h3>
                 <p>When you donate to Opening Hearts Sudan Emergency Fund, your donation will be used to:</p>
@@ -76,7 +76,7 @@ function FoodDriveFirstSec() {
                 <img src={carddonaimg} alt="" />
               </div>
 
-              <div className="foodorganization-card">
+              {/* <div className="foodorganization-card">
                 <div className="foodorganization-information">
                   <p>{campaignDetailPage?.company?.organization_name}</p>
                   <img width={'174.26px'} src={campaignDetailPage?.company?.profile_image} alt="" srcset="" />
@@ -86,19 +86,45 @@ function FoodDriveFirstSec() {
                 <div className="foodorganization-adress">
                   <p style={{ color: 'orangered', fontWeight: '700', }}>LOCATION:<span>{campaignDetailPage?.company?.street_address}</span></p>
                   <p style={{ color: 'orangered', fontWeight: '700', }}>WEBSITE:<span>{campaignDetailPage?.company?.website}</span></p>
-                  {/* <p style={{ color: 'orangered', fontWeight: '700', }}>FACEBOOK:<span> Facebook Page</span></p>
-                  <p style={{ color: 'orangered', fontWeight: '700', }}>TWITTER:<span> @GlobalGiving</span></p> */}
-                </div>
-              </div>
+                  <p style={{ color: 'orangered', fontWeight: '700', }}>FACEBOOK:<span> Facebook Page</span></p>
+                  <p style={{ color: 'orangered', fontWeight: '700', }}>TWITTER:<span> @GlobalGiving</span></p>
             </div>
-            <div className="col-md-5">
-            <FoodSideCompo data={campaignDetailPage}/>
+          </div> */}
+
+            </div>
+
+            <div className="col-md-4">
+              <FoodSideCompo data={campaignDetailPage} />
+              <br></br>
+              <div className="org-profile-card">
+
+                <div className='org-profile-name'>
+                  <div className='org-profile-img'>
+                    <img src={campaignDetailPage?.company?.profile_image} />
+                  </div>
+                  <div className="org-profile-name">
+                    <h2>{campaignDetailPage?.company?.organization_name}</h2>
+                  </div>
+                </div>
+
+                <div className="org-profile-data">
+                  <p style={{ color: 'orangered', fontWeight: '600', }}>Loc icon:<span> {campaignDetailPage?.company?.street_address}</span></p>
+                  <p style={{ color: 'orangered', fontWeight: '600', }}>EIN icon:<span> {campaignDetailPage?.company?.phone}</span></p>
+                  <p style={{ color: 'orangered', fontWeight: '600', }}>web icon:<span> {campaignDetailPage?.company?.website}</span></p>
+                </div>
+
+                <div className='vist-org-btn'>
+                  <Link to={`/funding-cycle?id=${campaignDetailPage?.company?.id}`} > <button>Follow</button> </Link>
+                </div>
+
+              </div>
+
             </div>
 
           </div>
-        </div>
+        </div >
 
-      </div>
+      </div >
     </>
   )
 }

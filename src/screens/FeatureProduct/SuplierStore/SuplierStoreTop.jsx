@@ -5,12 +5,13 @@ import share from '../../../media/images/material-symbols_share-outline.png'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { createChatRoom, saveProduct } from '../../../utils/api'
+import { useUserData } from '../../../components/shared/helperMethod'
 
 function SuplierStoreTop({id, guid , vendor}) {
     const navigate = useNavigate()
-    const userData = localStorage.getItem("login-user-data");
-    const parsedData = JSON.parse(userData);
-    const userId = parsedData?.data?.id;
+
+    const userfetch = useUserData()
+    const userId = userfetch?.id;
 
 
     const handleSaveVandor = async (e) =>{

@@ -16,10 +16,8 @@ function CustomerDashboardDashboard() {
   return (
     <>
       <HeaderTop/>
-    
     <div className='container'>
       <div className="dashboard-seller-service">
-
       <div className="row">
         <div className="col-lg-4"></div>
         <div className="col-lg-8">
@@ -36,7 +34,6 @@ function CustomerDashboardDashboard() {
         </div>
       </div >
       </div>
-
       <Footer/>
       </>
   )

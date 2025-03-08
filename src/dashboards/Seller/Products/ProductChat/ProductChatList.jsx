@@ -8,6 +8,7 @@ import blank from '../../../../media/images/blankuser.jpg'
 import { createChatRoom, getChatList, getCreatedChatList } from "../../../../utils/api";
 import Swal from "sweetalert2";
 import NoDataFound from "../../../../components/shared/noDataFound/NoDataFound";
+import { useUserData } from "../../../../components/shared/helperMethod";
 
 const chats = [
   { id: 1, name: "My AI Chat", lastMessage: "Will head to the Help Center...", profilePic: akane },
@@ -30,9 +31,12 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
   const [filteredCreatedChats, setFilteredCreatedChats] = useState();
 
 
-  const userData = localStorage.getItem("login-user-data");
-  const parsedData = JSON.parse(userData);
-  const userId = parsedData?.data?.id;
+ 
+     const userfetch = useUserData()
+ 
+     // const userData = localStorage.getItem("user_data");
+     // const parsedData = JSON.parse(userData);
+     const userId = userfetch?.id;
 
 
 
@@ -147,7 +151,7 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
         <div style={{ width: "350px" }}>
           <input
             type="text"
-            placeholder="Search for any service..."
+            placeholder="Search for Chat..."
             className="chat-search-input"
             value={searchQuery2}
             onChange={(e) => setSearchQuery2(e.target.value)}
@@ -240,7 +244,7 @@ const ProductChatList = ({selectedChat , setSelectedChat, createdChatData , fetc
             />
             <span className="chat-search-icon"><img src={search} /></span>
           </div>
-          {filteredChats?.length < 0 ? 
+          {filteredChats?.length > 0 ? 
           (<div className="wallet-modal-form-wrapper">
             {filteredChats?.map((chat) => (
               <div

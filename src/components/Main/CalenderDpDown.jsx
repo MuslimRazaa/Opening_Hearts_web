@@ -6,31 +6,7 @@ import cndr from '../../media/images/Calendar.png'
 import arr from '../../media/images/Vector.png'
 
 const CustomDatePicker = ({ datelabel }) => {
-    const [startDate, setStartDate] = useState(new Date());
-
-    const customInput = React.forwardRef(({ value, onClick }, ref) => (
-        <div
-            onClick={onClick}
-            ref={ref}
-            style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "10px 15px",
-                border: "1px solid #ff0080",
-                borderRadius: "8px",
-                background: "#fff",
-                cursor: "pointer",
-                color: "#000",
-                fontWeight: "500",
-                fontSize: "16px",
-                gap: "10px",
-            }}
-        >
-            <FaCalendarAlt style={{ color: "#ff0080" }} />
-            {value}
-            <span style={{ marginLeft: "auto", color: "#ff0080" }}>▼</span>
-        </div>
-    ));
+    const [startDate, setStartDate] = useState();
 
     return (
         <div className="clander-js">
@@ -51,7 +27,8 @@ const CustomDatePicker = ({ datelabel }) => {
                 <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
-                    dateFormat="d MMMM, yyyy"
+                    dateFormat="dd-MM-yyyy"
+                    placeholderText="Enter start date"
                 />
             </div>
         </div>

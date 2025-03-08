@@ -5,6 +5,7 @@ import cross from '../../../media/images/cross.png'
 import pen from '../../../media/images/pen.png'
 import { Link } from 'react-router-dom';
 import TopRatedProvidersHourly from '../cards/TopRatedProvidersHourly';
+import NoDataFound from '../../../components/shared/noDataFound/NoDataFound';
 
 function ServiceCatagoryCardSection({data}) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -34,7 +35,7 @@ function ServiceCatagoryCardSection({data}) {
                                     </button>
                                 {/* <img src={cross} alt="Remove Filter" className="cross-icon" /> */}
                             </div>
-                            <p>{data[0]?.sub_category?.description ? data[0]?.sub_category?.description : "No Data Found"} </p>
+                            {data[0]?.sub_category?.description ? <p>{data[0]?.sub_category?.description}</p> : <NoDataFound title="No Data Found" />}
                         </div>
                         <div className="setvice-catagory-image">
                             <img src={pen} />

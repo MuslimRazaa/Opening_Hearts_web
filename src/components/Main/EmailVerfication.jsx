@@ -29,7 +29,11 @@ function EmailVerfication() {
                 })
                 localStorage.setItem('token', response?.data?.data?.token)
                 localStorage.setItem('user_data', JSON.stringify(response?.data?.data))
-                navigate(`/packages?type=${type}`)
+                if (type === 'organization') {
+                    navigate(`/non-profit-form`)
+                } else {
+                    navigate(`/packages?type=${type}`)
+                }
             } catch (error) {
                 setFormLoading(false)
                 Swal.fire({
@@ -71,8 +75,7 @@ function EmailVerfication() {
                     <div className='form-main-forgot-password'>
                         <div className='verify_email_otp_heading'>
                             <h1 className='verify_email_otp_mainhead'>Email Verification</h1>
-                            <p>Enter 6 digits code<br></br>
-                            </p>
+                            <p>Enter 6 digits code<br></br></p>
                         </div>
                         <div className='verify_email_otp'>
                             <OtpInput

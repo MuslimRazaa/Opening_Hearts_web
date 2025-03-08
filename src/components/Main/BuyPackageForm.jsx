@@ -69,8 +69,10 @@ const PaymentForm = ({ type, planId }) => {
             localStorage.setItem('user_data', JSON.stringify(response?.data?.data))
             if (type === "product") {
                 navigate('/dashboard/product')
-            } else {
+            } else if (type === "service") {
                 navigate('/dashboard/service')
+            } else {
+                navigate('/dashboard/organization')
             }
         } catch (error) {
             Swal.fire({

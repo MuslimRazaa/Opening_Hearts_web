@@ -89,7 +89,9 @@ function SuplierStoreDetailPAge() {
              <SuplierAboutCompany vendor={vendor} guid={guid}/>
              <div className="container">
              <div className="sliderOne">
+                <div className="suplier-about-company-title">
                 <h2>Products</h2>
+                </div>
                 <SliderOneDetailPage guid={guid}  />
             </div>
             <div className="row">
@@ -184,7 +186,7 @@ function SuplierStoreDetailPAge() {
                         </div>
                             <ReviewComponent stars={stars} ratings={vendorFeedback}/>
                         </div>
-                        <div className="send-message-supplier-store">
+                        {/* <div className="send-message-supplier-store">
                             <div className="send-message-title-suplier">
                                 <h4>Send Message to Supplier</h4>
                             </div>
@@ -192,7 +194,7 @@ function SuplierStoreDetailPAge() {
                                 <input type='text' placeholder='Write Message.......'/>
                                 <button>Send</button>
                             </div>
-                        </div>
+                        </div> */}
              </div>
              <Footer/>
         

@@ -16,6 +16,7 @@ function SliderOneDetailPage({ guid }) {
     try {
       const response = await relatedproducts(guid);
       setProductDetails(response?.data?.data?.products); // Adjust based on API response structure
+      console.log(productDetails, "productDetails suplier details")
     } catch (error) {
       console.error('Error fetching categories:', error);
     }

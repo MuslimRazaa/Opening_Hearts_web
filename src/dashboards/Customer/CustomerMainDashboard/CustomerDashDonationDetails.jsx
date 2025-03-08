@@ -121,7 +121,7 @@ const CustomerDashDonationDetails = () => {
                                 </div>
                                 <div className="img-pro-and-icon-compaign">
                                     <img style={{ width: "25.28px" }} src={chatbox} alt="" />
-                                    <p style={{ fontSize: "13.58px" }}>Chat with Mathew
+                                    <p style={{ fontSize: "16px" }}>Chat with Mathew
 
                                     </p>
                                 </div>

@@ -50,12 +50,12 @@ function SuplierAboutCompany({ vendor, guid }) {
                                         </div>
                                     </div>
                                     <div className="col-md-3">
-                                        <div className="both-camp-txt-suplier">
+                                        {/* <div className="both-camp-txt-suplier">
                                             <h2>
                                                 78+
                                             </h2>
                                             <p>Company</p>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                 </div>

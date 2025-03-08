@@ -68,8 +68,10 @@ const PaymentForm = ({ type, planId }) => {
             const response = await apis.updateSubscription(formData);
             if (type === "product") {
                 navigate('/dashboard/product-subscription')
-            } else {
+            } else if(type === "service") {
                 navigate('/dashboard/service-subscription')
+            }else{
+                navigate('/dashboard/organization-subscription')
             }
         } catch (error) {
             Swal.fire({

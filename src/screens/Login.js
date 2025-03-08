@@ -8,7 +8,7 @@ import fb from '../media/images/fb.png';
 import google from '../media/images/google.png';
 import eye from '../media/images/eye.svg';
 import eyeHide from '../media/images/eyeHide.svg';
-import { LoginUser } from '../utils/api';
+import { fcmUser, LoginUser } from '../utils/api';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +35,14 @@ function Login() {
         }
     }, []);
 
-
+       const FetchFCM = async (tab) => {
+           try {
+               const response = await fcmUser(tab);   
+           }
+           catch (err) {
+               console.error(err)   
+           }
+       }
 
     // Handle form submission
     const handleSubmit = async (values) => {
@@ -64,6 +71,7 @@ function Login() {
             //     confirmButtonText: 'OK',
             //     timer: 2000
             // });
+            FetchFCM();
             navigate('/'); // Redirect after successful login
         } catch (err) {
             Swal.fire({

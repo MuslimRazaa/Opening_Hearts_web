@@ -129,8 +129,8 @@ function ProductOrderManagment() {
                         </div>
                     </div>
                     <div className='orders-table-and-tabs'>
-                        <div className="orders-table-heading">
-                            <h2>Recent Orders</h2>
+                        <div className="orders-table-heading mt-4">
+                            <h2>Order Management</h2>
                         </div>
                         <div className='table-tabs-main'>
                             <div className="tabs-button-wrapper">
@@ -210,7 +210,7 @@ function ProductOrderManagment() {
                                                 </div>
                                             ))
                                             :
-                                            <NoDataFound title={'No dat found'} />
+                                            <NoDataFound title={'No data found'} />
                                         }
                                     </div>
 

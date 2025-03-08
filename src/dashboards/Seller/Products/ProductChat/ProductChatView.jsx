@@ -6,6 +6,7 @@ import lsp from "../../../../media/images/logo-sign-up.png";
 import InputEmoji from "react-input-emoji";
 import { ChatBox, sendMessage } from "../../../../utils/api";
 import { Spinner } from "react-bootstrap";
+import { useUserData } from "../../../../components/shared/helperMethod";
 
 const ProductChatView = ({ selectedChat, fetchCreatedChatList }) => {
     const [createdChatData, setCreatedChatData] = useState([]);
@@ -13,11 +14,12 @@ const ProductChatView = ({ selectedChat, fetchCreatedChatList }) => {
     const [loading2, setLoading2] = useState(false);
     const [newMessage, setNewMessage] = useState(""); // Fix: State reset issue
     const chatContainerRef = useRef(null); // Ref for the chat container to control scroll
-
     
-    const userData = localStorage.getItem("login-user-data");
-    const parsedData = JSON.parse(userData);
-    const userId = parsedData?.data?.id;
+   const userfetch = useUserData()
+ 
+     // const userData = localStorage.getItem("user_data");
+     // const parsedData = JSON.parse(userData);
+     const userId = userfetch?.id;
 
     // ✅ Message send function
     const handleOnEnter = async (msg) => {
@@ -66,6 +68,8 @@ const ProductChatView = ({ selectedChat, fetchCreatedChatList }) => {
             fetchChatList();
         }
         fetchCreatedChatList();
+
+        console.log(selectedChat, "selected chat")
     }, [selectedChat]);
 
 

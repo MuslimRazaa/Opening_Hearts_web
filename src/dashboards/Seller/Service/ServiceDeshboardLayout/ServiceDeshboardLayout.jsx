@@ -14,10 +14,10 @@ function ServiceDeshboardLayout() {
       <div className='container'>
         <div className="dashboard-seller-service">
           <div className="row">
-            <div className="col-lg-4">
+            <div className="col-lg-3">
               <SideBar/>
             </div>
-            <div className="col-lg-8">
+            <div className="col-lg-9">
               <Outlet />
             </div>
           </div>

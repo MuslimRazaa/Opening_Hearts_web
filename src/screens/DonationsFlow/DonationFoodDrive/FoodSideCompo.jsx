@@ -59,9 +59,6 @@ const FoodSideCompo = ({data}) => {
       <Link to="/become-a-volunteer" style={{textDecoration:"none"}}><h2>Become a Volunteer</h2></Link> 
        </div>
 
-      
-
-     
     </div>
   );
 };

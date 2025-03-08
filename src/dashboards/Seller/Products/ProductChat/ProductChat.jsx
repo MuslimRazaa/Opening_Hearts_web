@@ -96,7 +96,7 @@ function ProductChat() {
   };
 
   const sendMessage = async () => {
-    
+
     if (newMessage.trim() !== "") {
       try {
         console.log('calling');
@@ -105,7 +105,7 @@ function ProductChat() {
           uid: user_id,
           from_id: selectedChat?.participants,
           message_type: 1,
-          message:newMessage,
+          message: newMessage,
           status: 0
         };
         const response = await apis.sendChatMessage(Massage);
@@ -184,95 +184,99 @@ function ProductChat() {
         </div>
         :
         <>
-          <div className="main-content w-full" id="hide-on-mobile-chat">
-            <div className="chat-container">
-              <div className="chat-container-wrap">
-                <div className="chat-container-wrap-left">
-                  <div className="sidebar">
-                    <input type="text" placeholder="Search chats..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <div className="chat-listing-wrap">
-                      <ul>
-                        {filterChats().map((chat, index) => {
-                          return (
-                            <li key={chat?.id} onClick={() => handleChatSelection(chat?.id, chat)}
-                              className={selectedChat?.id === chat?.id ? "active-chat" : chat?.read_count > 0 ? "active-count" : ""}>
-                              <div className="list-image-chat">
-                                <div>
-                                  {chat?.sender_profile_image?.includes('http') ?
-                                    <img src={chat?.sender_profile_image} style={{ borderRadius: "40px" }} width="40" height="40" />
-                                    :
-                                    <img src={blankUser} style={{ borderRadius: "40px" }} width="40" height="40" />
-                                  }
-                                </div>
-                                <div className="name-mgs">
-                                  <div className="name">{chat?.sender_name} {chat?.sender_last_name}</div>
-                                  <p className="message">{chat?.message?.substring(0, 10)}...</p>
-                                </div>
-                                <div className="time">
-                                  {selectedChat?.id == messages?.[0]?.room_id && selectedChat?.id && messages?.[0]?.room_id ? null :
-                                    chat?.read_count > 0 && <div className="read"><span>{chat?.read_count}</span></div>
-                                  }
+          {filterChats()?.length > 0 ?
+            <div className="main-content w-full" id="hide-on-mobile-chat">
+              <div className="chat-container">
+                <div className="chat-container-wrap">
+                  <div className="chat-container-wrap-left">
+                    <div className="sidebar">
+                      <input type="text" placeholder="Search chats..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                      <div className="chat-listing-wrap">
+                        <ul>
+                          {filterChats().map((chat, index) => {
+                            return (
+                              <li key={chat?.id} onClick={() => handleChatSelection(chat?.id, chat)}
+                                className={selectedChat?.id === chat?.id ? "active-chat" : chat?.read_count > 0 ? "active-count" : ""}>
+                                <div className="list-image-chat">
+                                  <div>
+                                    {chat?.sender_profile_image?.includes('http') ?
+                                      <img src={chat?.sender_profile_image} style={{ borderRadius: "40px" }} width="40" height="40" />
+                                      :
+                                      <img src={blankUser} style={{ borderRadius: "40px" }} width="40" height="40" />
+                                    }
+                                  </div>
+                                  <div className="name-mgs">
+                                    <div className="name">{chat?.sender_name} {chat?.sender_last_name}</div>
+                                    <p className="message">{chat?.message?.substring(0, 10)}...</p>
+                                  </div>
                                   <div className="time">
-                                    {chat?.date?.slice(0, 5)}
-                                    {chat?.date?.slice(9, 20)}
+                                    {selectedChat?.id == messages?.[0]?.room_id && selectedChat?.id && messages?.[0]?.room_id ? null :
+                                      chat?.read_count > 0 && <div className="read"><span>{chat?.read_count}</span></div>
+                                    }
+                                    <div className="time">
+                                      {chat?.date?.slice(0, 5)}
+                                      {chat?.date?.slice(9, 20)}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="chat-container-wrap-right">
-                  <div className="conversation">
-                    {messages?.length > 0 ? (
-                      loadingChat ?
-                        <div className="customer-chat-detail-loader"><LoadingComponents /></div>
-                        :
-                        <div className="messages-container">
-                          <div className="chat-header">
-                            {selectedChat?.sender_profile_image ? (
-                              <><img src={selectedChat?.sender_profile_image} /></>) : (<><img src={blankUser} alt="blank" /></>)}
-                            {selectedChat?.sender_id}
-                            <div className="name-last-seen">
-                              <h3>{selectedChat?.sender_name} {selectedChat?.sender_last_name}</h3>
-                            </div>
+                  <div className="chat-container-wrap-right">
+                    <div className="conversation">
+                      {messages?.length > 0 ? (
+                        loadingChat ?
+                          <div className="customer-chat-detail-loader"><LoadingComponents /></div>
+                          :
+                          <div className="messages-container">
+                            <div className="chat-header">
+                              {selectedChat?.sender_profile_image ? (
+                                <><img src={selectedChat?.sender_profile_image} /></>) : (<><img src={blankUser} alt="blank" /></>)}
+                              {selectedChat?.sender_id}
+                              <div className="name-last-seen">
+                                <h3>{selectedChat?.sender_name} {selectedChat?.sender_last_name}</h3>
+                              </div>
 
-                          </div>
-                          <div className="messages-cont" ref={chatContainerRef}>
-                            <div className="messages-cont-wrap">
-                              {messages?.map((msg) => {
-                                if (msg?.uid == user_id) {
-                                  return (
-                                    <div key={msg?.id} className="sent-message">
-                                      <div className="sent-message-wrap"><p className="message">{msg?.message}</p></div>
-                                    </div>);
-                                } else {
-                                  return (
-                                    <div key={msg?.id} className="received-message">
-                                      <div className="received-message-wrap"><p>{msg?.message}</p></div>
-                                    </div>
-                                  );
-                                }
-                              })}
+                            </div>
+                            <div className="messages-cont" ref={chatContainerRef}>
+                              <div className="messages-cont-wrap">
+                                {messages?.map((msg) => {
+                                  if (msg?.uid == user_id) {
+                                    return (
+                                      <div key={msg?.id} className="sent-message">
+                                        <div className="sent-message-wrap"><p className="message">{msg?.message}</p></div>
+                                      </div>);
+                                  } else {
+                                    return (
+                                      <div key={msg?.id} className="received-message">
+                                        <div className="received-message-wrap"><p>{msg?.message}</p></div>
+                                      </div>
+                                    );
+                                  }
+                                })}
+                              </div>
+                            </div>
+                            <div className="message-input">
+                              <input type="text" placeholder="Type a message..." value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)} />
+                              <span onClick={sendMessage}><IoSend /></span>
                             </div>
                           </div>
-                          <div className="message-input">
-                            <input type="text" placeholder="Type a message..." value={newMessage}
-                              onChange={(e) => setNewMessage(e.target.value)} />
-                            <span onClick={sendMessage}><IoSend /></span>
-                          </div>
-                        </div>
-                    ) : (
-                      loadingChat ? <div className="customer-chat-detail-loader"><LoadingComponents /></div>
-                        : <div className="no-chat-selected"><NoDataFound title={'No chat found'} /></div>)}
+                      ) : (
+                        loadingChat ? <div className="customer-chat-detail-loader"><LoadingComponents /></div>
+                          : <div className="no-chat-selected"><NoDataFound title={'No chat found'} /></div>)}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            :
+            <NoDataFound title={'No Chat Found'} />
+          }
         </>
       }
     </>

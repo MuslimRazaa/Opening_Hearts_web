@@ -220,7 +220,7 @@ function ServiceRevenueManagment() {
                                                 </div>
                                             ))
                                             :
-                                            <NoDataFound title={'No dat found'} />
+                                            <NoDataFound title={'No data found'} />
                                         }
                                     </div>
 

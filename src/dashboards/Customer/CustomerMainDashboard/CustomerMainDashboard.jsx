@@ -191,7 +191,7 @@ const CustomerMainDashboard = () => {
 
                             </div>
                             <div className="recent-data-tabel">
-                                <h2>Recent</h2>
+                                <h2>Recent Order</h2>
                                 <div className="row">
                                     <div className="col-md-12">
                                         <div className="calender-buttons">
@@ -205,7 +205,7 @@ const CustomerMainDashboard = () => {
                                         </div>
                                         {/* <TableCustomerDash loading={loading} data={recentOrders} /> */}
                                         <FoldedTable loading={loading} data={recentOrders} />
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +215,8 @@ const CustomerMainDashboard = () => {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <div className="customer-card-dash">
-                                            <h3>Active Order</h3>
+                                            <h2>Recent Order</h2>
+                                            <div className="calender-buttons"></div>
                                             {loadingValues ? <Spinner animation="border" role="status" /> : <h2>{dashboardServiceCount?.active_order}</h2>}
                                             <div className="total-uper-arrow">
                                                 <p>Achieved significant growth over the month.</p>
@@ -239,7 +240,7 @@ const CustomerMainDashboard = () => {
 
                                 </div>
                                 <div className="recent-data-tabel">
-                                    <h2>Recentll</h2>
+                                    <h2>Recent Order</h2>
                                     <LoadingComponents />
 
 
@@ -292,6 +293,7 @@ const CustomerMainDashboard = () => {
                                     </div>
                                     <div className="recent-data-tabel">
                                         <h2>Recent Campaigns</h2>
+                                        <div className="calender-buttons"></div>
                                         <div className="row">
                                             <div className="col-md-12">
                                                 {/* <div className="calender-buttons">

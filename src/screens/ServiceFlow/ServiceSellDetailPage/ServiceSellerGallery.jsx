@@ -43,7 +43,7 @@ const ServiceSellerGallery = ({ data, data_review }) => {
         fetchCartCountApi();
     }, []);
 
-    
+
     const handelBuyNowService = async (id, p_id) => {
         setLoading(true)
         const data = {
@@ -109,7 +109,7 @@ const ServiceSellerGallery = ({ data, data_review }) => {
     const handlePlanTab = (tab) => {
         setPlanTab(tab)
     }
-    
+
 
     return (
         <div className="container">
@@ -156,115 +156,119 @@ const ServiceSellerGallery = ({ data, data_review }) => {
                                 </div>
                             </div>
                             <div className="packages-detail-preview-page">
-                                {planTab === "Bs" ? 
-                                (<>
-                                <h3>Basic</h3>
-                                <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
-                                <h2>${data?.service_plan[0]?.plan_price}</h2>
-                                </>)
-                                : planTab === "St" ? 
-                                (<>
-                                <h3>Standard</h3>
-                                <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
-                                <h2>${data?.service_plan[1]?.plan_price}</h2>
-                                </>)
-                                :
-                                planTab === "Ad" ? 
-                                (<>
-                                <h3>Advance</h3>
-                                <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
-                                <h2>${data?.service_plan[2]?.plan_price}</h2>
-                                </>)
-                                : ""}
+                                {planTab === "Bs" ?
+                                    (<>
+                                        <h3>Basic</h3>
+                                        <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
+                                        <h2>${data?.service_plan[0]?.plan_price}</h2>
+                                    </>)
+                                    : planTab === "St" ?
+                                        (<>
+                                            <h3>Standard</h3>
+                                            <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
+                                            <h2>${data?.service_plan[1]?.plan_price}</h2>
+                                        </>)
+                                        :
+                                        planTab === "Ad" ?
+                                            (<>
+                                                <h3>Advance</h3>
+                                                <p>Boost brand exposure during our biggest sourcing events and online trade shows, including Super September and March Expo. </p>
+                                                <h2>${data?.service_plan[2]?.plan_price}</h2>
+                                            </>)
+                                            : ""}
                             </div>
-                            {planTab === "Bs" ? 
-                            (<div className="row">
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={tim} />
-                                        <p>{data?.service_plan[0]?.delivery_time} delivery</p>
+                            {planTab === "Bs" ?
+                                (<div className="row">
+                                    <div className="col-lg-3">
+                                        <div className="bottom-package-col-preview-page ">
+                                            <img src={tim} />
+                                            <p>{data?.service_plan[0]?.delivery_time} delivery</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={rev} />
-                                        <p>{data?.service_plan[0]?.revision}</p>
+                                    <div className="col-lg-3">
+                                        <div className="bottom-package-col-preview-page ">
+                                            <img src={rev} />
+                                            <p>{data?.service_plan[0]?.revision}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <p>Payment Upfront</p>
+                                    <div className="col-lg-6">
+                                        <div className="bottom-package-col-preview-page ">
+                                            <p>Payment Upfront</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>) :
-                            planTab === "St" ? 
-                            (<div className="row">
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={tim} />
-                                        <p>{data?.service_plan[1]?.delivery_time} delivery</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={rev} />
-                                        <p>{data?.service_plan[1]?.revision}</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <p>Payment Upfront</p>
-                                    </div>
-                                </div>
-                            </div>) :
-                            planTab === "Ad" ? 
-                            (<div className="row">
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={tim} />
-                                        <p>{data?.service_plan[2]?.delivery_time} delivery</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-3">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <img src={rev} />
-                                        <p>{data?.service_plan[2]?.revision}</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className="bottom-package-col-preview-page ">
-                                        <p>Payment Upfront</p>
-                                    </div>
-                                </div>
-                            </div>) : "" }
+                                </div>) :
+                                planTab === "St" ?
+                                    (<div className="row">
+                                        <div className="col-lg-3">
+                                            <div className="bottom-package-col-preview-page ">
+                                                <img src={tim} />
+                                                <p>{data?.service_plan[1]?.delivery_time} delivery</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-lg-3">
+                                            <div className="bottom-package-col-preview-page ">
+                                                <img src={rev} />
+                                                <p>{data?.service_plan[1]?.revision}</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-lg-6">
+                                            <div className="bottom-package-col-preview-page ">
+                                                <p>Payment Upfront</p>
+                                            </div>
+                                        </div>
+                                    </div>) :
+                                    planTab === "Ad" ?
+                                        (<div className="row">
+                                            <div className="col-lg-3">
+                                                <div className="bottom-package-col-preview-page ">
+                                                    <img src={tim} />
+                                                    <p>{data?.service_plan[2]?.delivery_time} delivery</p>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-3">
+                                                <div className="bottom-package-col-preview-page ">
+                                                    <img src={rev} />
+                                                    <p>{data?.service_plan[2]?.revision}</p>
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-6">
+                                                <div className="bottom-package-col-preview-page ">
+                                                    <p>Payment Upfront</p>
+                                                </div>
+                                            </div>
+                                        </div>) : ""}
                             <div className="row">
                                 <div className="col-lg-5">
                                     {count?.productCount === 0 ?
-                                    <div className="book-now-btn">
-                                         {planTab === "Bs" ? <button onClick={() => handelBuyNowService(data?.id ,data?.service_plan[0]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button>
-                                            :
-                                            planTab === "St" ?  <button onClick={() => handelBuyNowService(data?.id ,data?.service_plan[1]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button>
+                                        <div className="book-now-btn">
+                                            {planTab === "Bs" ? <button onClick={() => handelBuyNowService(data?.id, data?.service_plan[0]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button>
                                                 :
-                                                planTab === "Ad" ?<button onClick={() => handelBuyNowService(data?.id ,data?.service_plan[2]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button> : ""}
-                                    </div> : 
-                                    <div className="book-now-btn">
-                                         {planTab === "Bs" ? <button onClick={() => handelAddService(data?.id ,data?.service_plan[0]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button>
-                                            :
-                                            planTab === "St" ?  <button onClick={() => handelAddService(data?.id ,data?.service_plan[1]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button>
-                                                :
-                                                planTab === "Ad" ?<button onClick={() => handelAddService(data?.id ,data?.service_plan[2]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button> : ""}
-                                    </div>
+                                                planTab === "St" ? <button onClick={() => handelBuyNowService(data?.id, data?.service_plan[1]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button>
+                                                    :
+                                                    planTab === "Ad" ? <button onClick={() => handelBuyNowService(data?.id, data?.service_plan[2]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Hire Now"}</button> : ""}
+                                        </div> :
+                                        count?.productCount > 0 ?
+                                            (<div className="book-now-btn">
+                                                {planTab === "Bs" ? <button onClick={() => handelAddService(data?.id, data?.service_plan[0]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button>
+                                                    :
+                                                    planTab === "St" ? <button onClick={() => handelAddService(data?.id, data?.service_plan[1]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button>
+                                                        :
+                                                        planTab === "Ad" ? <button onClick={() => handelAddService(data?.id, data?.service_plan[2]?.id)}>{loading2 ? <Spinner animation="border" role="status" /> : "Add to Cart"}</button> : ""}
+                                            </div>) :
+                                            <div className="book-now-btn">
+                                                <button ><Spinner animation="border" role="status" /></button>
+                                            </div>
                                     }
                                 </div>
                                 <div className="col-lg-4">
                                     <div className="View-Packages-btn">
-                                      <a href="#packages"><button>View Packages</button></a>
+                                        <a href="#packages"><button>View Packages</button></a>
                                     </div>
                                 </div>
                                 <div className="col-lg-3">
-                                    
+
                                 </div>
-                               
+
 
                             </div>
                         </div>

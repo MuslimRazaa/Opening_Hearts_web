@@ -15,7 +15,7 @@ function ServiceSection5() {
           <p>Over 140+ Categories</p>
           </div>
         </div>
-        <div className="container">
+        {/* <div className="container">
           <div className="looking-for">
             <h4>Did you find what you were looking for？ </h4>
             <div className="looking-for-buttons">
@@ -27,7 +27,7 @@ function ServiceSection5() {
               </button>
               </div>
           </div>
-        </div>
+        </div> */}
     </div>
   )
 }

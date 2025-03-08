@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import master from '../../media/images/master.png';
 import paynieer from '../../media/images/poynier.png';
 import square from '../../media/images/square.png';
@@ -10,7 +10,7 @@ import Footer from '../../components/Layout/Footer';
 import right from '../../media/images/tic.png'
 import Modal from '../../components/Layout/Modal';
 import { Link, useNavigate } from 'react-router-dom';
-import { buyNowGetCart, order, orderService } from '../../utils/api';
+import { buyNowGetCart, getDefaultAddress, order, orderService } from '../../utils/api';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -18,13 +18,32 @@ import { STRIPE_PUBLISH_KEY } from '../../utils/api';
 import Swal from 'sweetalert2';
 import { Spinner } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
+import { StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
+const libraries = ["places"];
 
 function ServiceBillingPage() {
+    const { isLoaded, loadError } = useJsApiLoader({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_PLACES, libraries });
+    const inputRef = useRef();
     const [serviceByNowBillingPage, setServiceByNowBillingPage] = useState([]);
     const [serviceByNowBillingPagePrice, setServiceByNowBillingPagePrice] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loading3, setLoading3] = useState(false);
+    const [defaultAddress, setDefaultAddress] = useState();
+    const [newAdd, setNewAdd] = useState("");
+        const [addAddress, setAddAddress] = useState(false);
+    
 
     const [error, setError] = useState("");
+    const [showFormData, setShopFormData] = useState({
+        address: "",
+        city: "",
+        country: "",
+        zip_code: "",
+        latitude:"",
+        longitude:"",
+    })
+
+
 
     const stripe = useStripe();
     const elements = useElements();
@@ -46,6 +65,48 @@ function ServiceBillingPage() {
             },
         },
     };
+    const handlePlaceChanged = () => {
+        const places = inputRef.current?.getPlaces();
+        console.log("places:", places); // 🛠 Debugging line
+        
+        if (!places || !Array.isArray(places)) {
+            console.error("Invalid places data:", places);
+            return;
+        }
+    
+        const place = places[0]; 
+        console.log("place:", place); // 🛠 Debugging line
+    
+        if (place?.geometry?.location) {
+            setShopFormData(prev => ({
+                ...prev,
+                address: place.formatted_address || "",
+                city: place.name || "",
+                country: place.address_components?.find(comp => comp.types.includes('country'))?.long_name || "",
+                zip_code: place.address_components?.find(comp => comp.types.includes('postal_code'))?.long_name || "",
+                latitude: place.geometry.location.lat(), 
+                longitude: place.geometry.location.lng() 
+            }));
+        } else {
+            console.error("place.geometry.location is undefined");
+        }
+    };
+    const handleAddAddress = () => {
+        setAddAddress(true)
+    }
+
+ const fetchGetDefaultAddress = async () => {
+        setLoading3(true)
+        try {
+            const response = await getDefaultAddress();
+            setDefaultAddress(response?.data?.data); // Update state with cart items
+            setLoading3(false)
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
+            setLoading3(false)
+        }
+    };
+
 
     const fetchBuyNowGetCart = async () => {
         setLoading(true)
@@ -60,10 +121,15 @@ function ServiceBillingPage() {
             setLoading(false)
         }
     };
-
     useEffect(() => {
         fetchBuyNowGetCart();
+        fetchGetDefaultAddress();
+
     }, [])
+
+    const handleSaveAddress = () => {
+        setNewAdd(showFormData?.address || null)
+    }
 
     const handleSubmit = async (e) => {
         setLoading(true)
@@ -92,10 +158,10 @@ function ServiceBillingPage() {
                 return;
             }
             const data = {
-                address: '',
+                address: defaultAddress?.address || showFormData?.address,
+                latitude: defaultAddress?.latitude || showFormData?.latitude,
+                longitude: defaultAddress?.longitude || showFormData?.longitude,
                 phone: "",
-                latitude: '',
-                longitude: '',
                 payment_intent: paymentMethod?.id,
                 web_type: 1,
             }
@@ -126,18 +192,34 @@ function ServiceBillingPage() {
                             <div className="billing-info">
                                 <h2>Billing Information</h2>
                                 <div className="row">
-                                    <div className="col-lg-6">
-                                        <p>
-                                            Boost brand exposure during our biggest sourcing events and online
-                                            trade shows, including Super September and March Expo.
-                                        </p>
-                                    </div>
-                                    <div className="col-lg-6">
-                                        <div className="add-details-button">
-                                            <Link to="/serviceBillingDetail" style={{ textDecoration: "none" }}> <button className="add-details-button">Add Details</button></Link>
-                                        </div>
+                                {(defaultAddress?.address || newAdd) &&
+                                    (<div className="Address-checkout" style={{padding: "15px"}}>
+                                        <p>Address</p>
+                                        <h5 className="checkout-Address">{defaultAddress?.address || showFormData?.address} hello</h5>
+                                    </div>)}
+                                {(defaultAddress?.address || newAdd) ? (<Link to="/customer-dashboard/customer-setting" ><p className="checkout-change-address">Change Address</p></Link>) : <Link to="" ><p onClick={handleAddAddress} className="checkout-change-address">+ Add Address</p></Link>}
 
-                                    </div>
+                                {isLoaded && (!newAdd && addAddress) && (    
+                                    <StandaloneSearchBox
+                                        onLoad={ref => inputRef.current = ref}
+                                        onPlacesChanged={handlePlaceChanged}
+                                    >
+                                        <input
+                                            type="text"
+                                            className="address-checkout"
+                                            placeholder={"Enter address"}
+                                            // defaultValue={showFormData.address}
+                                            name='address'
+                                            // onChange={handleChange}
+                                            style={{ width: '100%' }}
+                                        />
+                                    </StandaloneSearchBox>
+                                )
+                                }
+                               {(!newAdd && addAddress)  && <button className="btn-add-save-checkout" onClick={handleSaveAddress}>Save</button>}
+
+
+
                                 </div>
                             </div>
                             <div className="payment-options">

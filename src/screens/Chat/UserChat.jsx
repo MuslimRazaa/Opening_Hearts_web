@@ -4,6 +4,7 @@ import ProductChatView from '../../dashboards/Seller/Products/ProductChat/Produc
 import Header from '../../components/Layout/Header';
 import Footer from '../../components/Layout/Footer';
 import { getCreatedChatList } from '../../utils/api';
+import { useUserData } from '../../components/shared/helperMethod';
 
 function UserChat() {
     const [selectedChat, setSelectedChat] = useState(() => {
@@ -23,10 +24,11 @@ function UserChat() {
       }, [selectedChat]);
 
 
+    const userfetch = useUserData()
 
-    const userData = localStorage.getItem("login-user-data");
-    const parsedData = JSON.parse(userData);
-    const userId = parsedData?.data?.id;
+    // const userData = localStorage.getItem("user_data");
+    // const parsedData = JSON.parse(userData);
+    const userId = userfetch?.id;
 
     const fetchCreatedChatList = async () => {
         setLoading(true);

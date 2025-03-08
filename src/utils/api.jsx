@@ -14,6 +14,7 @@ export const STRIPE_PUBLISH_KEY= "pk_test_51HiCo6EHLDkHxi1YwwTc185yQTBuRIZktAiqL
 
 
     const token = localStorage.getItem('token'); // Get the token from localStorage
+    const FCM_token = localStorage.getItem('FCM_token'); // Get the token from localStorage
     const headers = token ? { Authorization: `Bearer ${token}` } : {}; // Set the Authorization header as an object  
   
 
@@ -59,8 +60,13 @@ export const topRatedService = async () => await axiosInstance.get(`${BASE_URL}s
 // top rated stores 
 export const topRatedCampaings = async () => await axiosInstance.get(`${BASE_URL}organization-user/campaigns`);
 
+export const organizationCount = async () => await axiosInstance.get(`${BASE_URL}home/organization-count`);
+
 // product all categories
 export const productAllCategories = async () => await axiosInstance.get(`${BASE_URL}categories`);
+
+export const notifications = async (tab) => await axiosInstance.get(`${BASE_URL}notification?type=${tab}&user_type=user`);
+export const fcmUser = async (tab) => await axiosInstance.post(`${BASE_URL}user?${FCM_token}`);
 
 export const popularService = async () => await axiosInstance.get(`${BASE_URL}service/popular-services`);
 
@@ -136,7 +142,7 @@ export const  getAddress = async () => await axiosInstance.get(`${BASE_URL}addre
 
 export const  addOrupdateAddress = async (data) => await axiosInstance.post(`${BASE_URL}address/store-update` , data);
 
-export const  deleteAddress = async (id) => await axiosInstance.delete(`${BASE_URL}address/delete/${id}`);
+export const  deleteAddress = async (id) => await axiosInstance.post(`${BASE_URL}address/delete/${id}`);
 
 export const  getDefaultAddress = async () => await axiosInstance.get(`${BASE_URL}address/default`, );
 

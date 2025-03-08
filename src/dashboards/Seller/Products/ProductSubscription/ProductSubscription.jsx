@@ -253,7 +253,7 @@ function ProductSubscription() {
                   :
                   null
                 }
-                {/* {subscriptions?.select_plan?.plan_name === "Gold" ?
+                {subscriptions?.select_plan?.plan_name === "Gold" ?
                   <div className="row">
                     {subscriptions?.plan?.map((subscription, index) => {
                       return (
@@ -333,7 +333,7 @@ function ProductSubscription() {
                   </div>
                   :
                   null
-                } */}
+                }
               </div>
             </div >
           </>

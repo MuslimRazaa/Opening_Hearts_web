@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import stripeS from '../../media/images/stripe.png'
 import rightw from '../../media/images/tic.png'
 import Modal from '../../components/Layout/Modal'
@@ -12,14 +12,17 @@ import Swal from 'sweetalert2'
 import { Spinner } from 'react-bootstrap'
 import { useUserData } from '../../components/shared/helperMethod'
 import NoDataFound from '../../components/shared/noDataFound/NoDataFound'
-import { useLoadScript, Autocomplete } from '@react-google-maps/api';
+import { useLoadScript, Autocomplete, StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
 import { Formik, Form, Field } from "formik";
 import { loadStripe } from '@stripe/stripe-js'
+import LoadingComponents from '../../components/shared/loaders/LoadingComponents'
 
 const libraries = ["places"];
 const stripePromise = loadStripe(STRIPE_PUBLISH_KEY);
 
 function CheckoutSection2() {
+    const { isLoaded, loadError } = useJsApiLoader({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_PLACES, libraries });
+    const inputRef = useRef();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [addAddress, setAddAddress] = useState(false);
@@ -27,67 +30,49 @@ function CheckoutSection2() {
     const [cartItemPrices, setCartItemPrices] = useState();
     const [loading, setLoading] = useState(false);
     const [loading2, setLoading2] = useState(false);
+    const [loading3, setLoading3] = useState(false);
     const [serviceCartItems, setServiceCartItems] = useState([]);
     const [error, setError] = useState("");
+    const [newAdd, setNewAdd] = useState("");
     const stripe = useStripe();
     const elements = useElements();
     const userfetch = useUserData()
-    const [autocomplete, setAutocomplete] = useState(null);
-    const [savedAddress, setSavedAddress] = useState("");
-    const googlePlacesApiKey = "AIzaSyDg6Ci3L6yS5YvtKAkWQjnodGUtlNYHw9Y";
-
-    const { isLoaded } = useLoadScript({
-        googleMapsApiKey: googlePlacesApiKey,
-        libraries,
-    });
-
-    const handleAutocompleteLoad = (autocompleteInstance) => {
-        setAutocomplete(autocompleteInstance);
-    };
-
-    const handlePlaceChanged = (setValues) => {
-        if (autocomplete) {
-            const place = autocomplete.getPlace();
-            if (place) {
-                const address = place.formatted_address || "";
-                const lat = place.geometry?.location?.lat() || "";
-                const lng = place.geometry?.location?.lng() || "";
-                const addressComponents = place.address_components || [];
-                let country = "";
-                let city = "";
-                let zip_code = "";
-
-                // Extract address components
-                addressComponents.forEach((component) => {
-                    const types = component.types;
-                    if (types.includes("country")) {
-                        country = component.long_name;
-                    }
-                    if (types.includes("locality")) {
-                        city = component.long_name;
-                    }
-                    if (types.includes("postal_code")) {
-                        zip_code = component.long_name;
-                    }
-                });
-
-                setSavedAddress({
-                    address,
-                    latitude: lat,
-                    longitude: lng,
-                });
 
 
-                // ✅ Update all values at once without delay
-                setValues({
-                    address,
-                    lat,
-                    lng,
-                    city,
-                    country,
-                    zip_code,
-                });
-            }
+
+    const [showFormData, setShopFormData] = useState({
+        address: "",
+        city: "",
+        country: "",
+        zip_code: "",
+        latitude:"",
+        longitude:"",
+    })
+
+    const handlePlaceChanged = () => {
+        const places = inputRef.current?.getPlaces();
+        console.log("places:", places); // 🛠 Debugging line
+        
+        if (!places || !Array.isArray(places)) {
+            console.error("Invalid places data:", places);
+            return;
+        }
+    
+        const place = places[0]; 
+        console.log("place:", place); // 🛠 Debugging line
+    
+        if (place?.geometry?.location) {
+            setShopFormData(prev => ({
+                ...prev,
+                address: place.formatted_address || "",
+                city: place.name || "",
+                country: place.address_components?.find(comp => comp.types.includes('country'))?.long_name || "",
+                zip_code: place.address_components?.find(comp => comp.types.includes('postal_code'))?.long_name || "",
+                latitude: place.geometry.location.lat(), 
+                longitude: place.geometry.location.lng() 
+            }));
+        } else {
+            console.error("place.geometry.location is undefined");
         }
     };
 
@@ -110,14 +95,14 @@ function CheckoutSection2() {
     };
 
     const fetchGetDefaultAddress = async () => {
-        setLoading2(true)
+        setLoading3(true)
         try {
             const response = await getDefaultAddress();
             setDefaultAddress(response?.data?.data); // Update state with cart items
-            setLoading2(false)
+            setLoading3(false)
         } catch (error) {
             console.error('Error fetching cart items:', error);
-            setLoading2(false)
+            setLoading3(false)
         }
     };
 
@@ -171,6 +156,10 @@ function CheckoutSection2() {
 
     const handleSubmit = async (e) => {
         setLoading(true)
+        console.log(showFormData, "data of address")
+        console.log(defaultAddress, "data of default address")
+        console.log(userfetch, "data of user fetch address")
+
         e.preventDefault();
         if (!stripe || !elements) {
             return;
@@ -200,10 +189,12 @@ function CheckoutSection2() {
                 // })
                 return;
             }
+
+
             const data = {
-                address: savedAddress?.address,
-                latitude: savedAddress?.latitude,
-                longitude: savedAddress?.longitude,
+                address: defaultAddress?.address || showFormData?.address,
+                latitude: defaultAddress?.latitude || showFormData?.latitude,
+                longitude: defaultAddress?.longitude || showFormData?.longitude,
                 payment_intent: paymentMethod?.id,
                 web_type: 1,
             }
@@ -233,6 +224,10 @@ function CheckoutSection2() {
         }
     };
 
+    const handleSaveAddress = () => {
+        setNewAdd(showFormData?.address || null)
+    }
+
     useEffect(() => {
         fetchCartItems();
         fetchServiceCartItems();
@@ -240,6 +235,15 @@ function CheckoutSection2() {
         fetchGetDefaultAddress();
     }, []);
 
+
+
+
+    if(loading2){
+        return(
+            <LoadingComponents />
+        )
+    }
+    else{
     return (
 
         <div className='container'>
@@ -265,51 +269,32 @@ function CheckoutSection2() {
                                 </div>
 
 
-                                {defaultAddress?.length > 0 &&
+                                {(defaultAddress?.address || newAdd) &&
                                     (<div className="Address-checkout">
                                         <p>Address</p>
-                                        <h5 className="checkout-Address">{defaultAddress?.address}</h5>
+                                        <h5 className="checkout-Address">{defaultAddress?.address || showFormData?.address} hello</h5>
                                     </div>)}
-                                {defaultAddress?.length > 0 ? (<Link to="" ><p className="checkout-change-address">Change Address</p></Link>) : <Link to="" ><p onClick={handleAddAddress} className="checkout-change-address">+ Add Address</p></Link>}
+                                {(defaultAddress?.address || newAdd) ? (<Link to="/customer-dashboard/customer-setting" ><p className="checkout-change-address">Change Address</p></Link>) : <Link to="" ><p onClick={handleAddAddress} className="checkout-change-address">+ Add Address</p></Link>}
 
-                                {addAddress && (
-                                    <Formik
-                                        initialValues={{
-                                            address: "",
-                                            lat: "",
-                                            lng: "",
-                                            city: "",
-                                            country: "",
-                                            zip_code: "",
-                                        }}
-                                        onSubmit={(values) => {
-                                            console.log(savedAddress, "sssaaaaavvvv")
-                                        }}
+                                {isLoaded && (!newAdd && addAddress) && (    
+                                    <StandaloneSearchBox
+                                        onLoad={ref => inputRef.current = ref}
+                                        onPlacesChanged={handlePlaceChanged}
                                     >
-                                        {({ setValues, values }) => (
-                                            <Form>
-                                                <div className="phone-checkout">
-                                                    {isLoaded ? (
-                                                        <Autocomplete
-                                                            onLoad={handleAutocompleteLoad}
-                                                            onPlaceChanged={() => handlePlaceChanged(setValues)} // Passing setValues directly
-                                                        >
-                                                            <Field type="text" name="address" placeholder="Search your address" />
-                                                        </Autocomplete>
-                                                    ) : (
-                                                        <p>Loading...</p>
-                                                    )}
-                                                </div>
-                                                {values.address && (
-                                                    <div className="phone-checkout">
-                                                        <p>Address</p>
-                                                        <p>{values.address}</p>
-                                                    </div>
-                                                )}
-                                            </Form>
-                                        )}
-                                    </Formik>
-                                )}
+                                        <input
+                                            type="text"
+                                            className="address-checkout"
+                                            placeholder={"Enter address"}
+                                            // defaultValue={showFormData.address}
+                                            name='address'
+                                            // onChange={handleChange}
+                                            style={{ width: '100%' }}
+                                        />
+                                    </StandaloneSearchBox>
+                                )
+                                }
+                               {(!newAdd && addAddress)  && <button className="btn-add-save-checkout" onClick={handleSaveAddress}>Save</button>}
+
 
 
                             </div>
@@ -480,8 +465,10 @@ function CheckoutSection2() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
+    }
+
 }
 
 export default CheckoutSection2

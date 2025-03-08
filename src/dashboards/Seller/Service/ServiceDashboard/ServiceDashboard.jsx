@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import funnyCartoon from '../../../../media/images/Tem_Images/funny-cartoon-superhero-character-with-mask 1.png'
 import vid from '../../../../media/images/Tem_Images/basil_video-outline.png'
 import img from '../../../../media/images/Tem_Images/mdi_images-outline.png'
@@ -14,6 +14,8 @@ import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import LoadingComponents from '../../../../components/shared/loaders/LoadingComponents'
 import { useUserData } from '../../../../components/shared/helperMethod'
+import NoDataFound from '../../../../components/shared/noDataFound/NoDataFound'
+import { FaRegEye } from 'react-icons/fa'
 
 const libraries = ['places'];
 
@@ -28,7 +30,9 @@ function ServiceDashboard() {
     const { isLoaded, loadError } = useJsApiLoader({ googleMapsApiKey: process.env.REACT_APP_GOOGLE_PLACES, libraries });
     const [category, setCategory] = useState([]);
     const [dashboard, setDashboard] = useState("");
-   const user = useUserData();
+    const user = useUserData();
+    const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
     const [showFormData, setShopFormData] = useState({
         name: "",
         description: "",
@@ -210,6 +214,20 @@ function ServiceDashboard() {
         }
     }
 
+    const serviceOrderManagment = async (orderType, search, startDate, endDate, page, page_size) => {
+        try {
+            const response = await apis.serviceOrderManagment(orderType, search, startDate, endDate, page, page_size);
+            setOrders(response?.data?.data);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            Swal.fire({
+                icon: 'error',
+                text: error.response?.data?.message,
+            });
+        }
+    }
+
     useEffect(() => {
         if (userData.is_service == 1) {
             getServiceDashboard();
@@ -218,6 +236,7 @@ function ServiceDashboard() {
 
     useEffect(() => {
         getAllCategories('service');
+        serviceOrderManagment(null, null, null, null, 1, 5);
     }, [])
 
     const handleFormSubmit = async (e) => {
@@ -586,8 +605,6 @@ function ServiceDashboard() {
                                                 <p>{dashboard?.total_complete_order_per}% month over month</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="row">
                                         <div className="col-lg-4">
                                             <div className="seller-db-box-TO">
                                                 <h3>Cancel Services</h3>
@@ -610,12 +627,64 @@ function ServiceDashboard() {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <div className='orders-table-and-tabs'>
-                  <div className="orders-table-heading">
-                    <h2>Recent Orders</h2>
-                  </div>
-                  <ProductTableTab />
-                </div> */}
+                                    <div className='orders-table-and-tabs'>
+                                        <div className="orders-table-heading">
+                                            <h2>Recent Orders</h2>
+                                        </div>
+                                        <div className="donation-detail-page-search-bar-table-tab"></div>
+                                        <div className='table-tabs-main'>
+                                            <div className="table-main-wrapper">
+                                                <div className='table-main-wrapper'>
+                                                    <div className="order-table">
+                                                        <div className="table-header">
+                                                            <div><p>Orders</p></div>
+                                                            <div><p>Date</p></div>
+                                                            <div><p>Service Count</p></div>
+                                                            <div><p>Amount</p></div>
+                                                            <div><p>Type</p></div>
+                                                            <div><p>Status</p></div>
+                                                            <div><p>Action</p></div>
+                                                        </div>
+                                                        {orders?.service?.length > 0 ?
+                                                            orders?.service?.map((order, index) => (
+                                                                <div className="table-row" key={index}>
+                                                                    <div><p>{order.orderid}</p></div>
+                                                                    <div><p>{order.created_at.slice(0, 10)}</p></div>
+                                                                    <div><p>{order.order_product_id?.length}</p></div>
+                                                                    <div><p>{order?.subtotal_price}</p></div>
+                                                                    <div>
+                                                                        {order?.order_product_id?.map((pro, i) => {
+                                                                            return (
+                                                                                <>
+                                                                                    {pro?.service_plan_id ?
+                                                                                        <p key={i}>Package{order?.order_product_id?.length - 1 === i ? "" : ", "}</p>
+                                                                                        :
+                                                                                        <p key={i}>Fixed {order?.order_product_id?.length - 1 === i ? "" : ", "}</p>
+                                                                                    }
+                                                                                </>
+                                                                            )
+                                                                        })}
+                                                                    </div>
+                                                                    <div>
+                                                                        <p>
+                                                                            {order?.order_product_id?.map((pro, i) => {
+                                                                                return (
+                                                                                    <span key={i}>{pro?.status}{order?.order_product_id?.length - 1 === i ? "" : ", "}</span>
+                                                                                )
+                                                                            })}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div><span className='delete' onClick={() => { navigate(`/dashboard/service-order-detail?id=${order?.id}`) }}><FaRegEye /></span></div>
+                                                                </div>
+                                                            ))
+                                                            :
+                                                            <NoDataFound title={'No data found'} />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </>
                         }
                     </>

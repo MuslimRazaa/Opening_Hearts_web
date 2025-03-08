@@ -56,7 +56,7 @@ function TopRatedSection() {
           </div>
           <div className="row">
             {Array.isArray(topRatedService) && topRatedService.length > 0 ? (
-              topRatedService.map((product) => (
+              topRatedService?.slice(0, 4).map((product) => (
                 <div className="col-lg-3" key={product.id}>
                   <TopRatedProvidersCard
                     id={product?.id}

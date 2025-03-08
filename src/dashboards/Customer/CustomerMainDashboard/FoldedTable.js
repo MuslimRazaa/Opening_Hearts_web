@@ -40,7 +40,7 @@ const FoldedTable = ({ active, loading, data }) => {
                         <Spinner animation="border" role="status" />
                     </div>
                 ) : (
-                    
+
                     data?.order?.length > 0 ? (
                         currentOrders?.map((order, index) => (
                             <React.Fragment key={order.id}>
@@ -59,16 +59,16 @@ const FoldedTable = ({ active, loading, data }) => {
                                         <p style={{ color: "#828D9E" }}>{order?.created_at.slice(0, 10)}</p>
                                     </div>
                                     <div>
-                                        <p style={{padding: "0px 14px"}}> ▪ ▪ ▪</p>
+                                        <p style={{ padding: "0px 14px" }}> ▪ ▪ ▪</p>
                                     </div>
                                     <div>
                                         <p>{order.subtotal_price}</p>
                                     </div>
-                                    <Link to={`/customer-dashboard/customer-dashboard-${active === "products" ? "product" : "service"}-detail?id=${order.id}`} style={{ textDecoration: "none" }}>
-                                        <div className='table-view-btn'>
+                                    <div className='table-view-btn'>
+                                        <Link to={`/customer-dashboard/customer-dashboard-${active === "products" ? "product" : "service"}-detail?id=${order.id}`} style={{ textDecoration: "none" }}>
                                             <img src={eye} style={{ width: "30px", height: "25px" }} alt="View" />
-                                        </div>
-                                    </Link>
+                                        </Link>
+                                    </div>
                                 </div>
 
                                 {/* Sub-orders will only be shown if this order is expanded */}
@@ -90,9 +90,9 @@ const FoldedTable = ({ active, loading, data }) => {
                                             <div>
                                                 <p>{product?.product?.price}</p>
                                             </div>
-                                            <Link  style={{ textDecoration: "none" }}>
+                                            <Link style={{ textDecoration: "none" }}>
                                                 <div className='table-view-btn'>
-                                                
+
                                                 </div>
                                             </Link>
                                         </div>
@@ -116,29 +116,29 @@ const FoldedTable = ({ active, loading, data }) => {
                                             <div>
                                                 <p>{product?.product?.price}</p>
                                             </div>
-                                            <Link  style={{ textDecoration: "none" }}>
+                                            <Link style={{ textDecoration: "none" }}>
                                                 <div className='table-view-btn'>
-                                                
+
                                                 </div>
                                             </Link>
                                         </div>
                                     ))}
                             </React.Fragment>
-                                
-                    ))
-                    
+
+                        ))
+
 
                     ) : (
                         <NoDataFound />
                     )
                 )}
-               <br />
+                <br />
                 {/* Pagination Component */}
                 {data?.order?.length > itemsPerPage && (
-                    <Pagination 
-                        totalItems={data?.order?.length} 
-                        itemsPerPage={itemsPerPage} 
-                        onPageChange={setCurrentPage} 
+                    <Pagination
+                        totalItems={data?.order?.length}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={setCurrentPage}
                     />
                 )}
             </div>
